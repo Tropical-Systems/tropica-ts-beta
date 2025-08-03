@@ -48,14 +48,14 @@ export default {
       .setFields([
         {
           name: "Bot Information",
-          value: `**Version:** 1.0.1\n**Servers:** ${serverSize}\n**Online Since:** <t:${Math.floor(
+          value: `Version: 1.0.1\nServers: ${serverSize}\nOnline Since: <t:${Math.floor(
             readySince
           )}:R>`,
           inline: true,
         },
         {
           name: "Links",
-          value: `**[Dashboard](${url}{/dashboard/${guildId})\n[Support Server](${url}/support)\n[Invite Tropica](${url}/invite)\n[Get Premium](${url}/premium)**`,
+          value: `[Dashboard](${url}{/dashboard/${guildId})\n[Support Server](${url}/support)\n[Invite Tropica](${url}/invite)\n[Get Premium](${url}/premium)`,
           inline: true,
         },
       ])
