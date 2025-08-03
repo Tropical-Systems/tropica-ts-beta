@@ -14,7 +14,7 @@ import guildDelete from "./Events/guildDelete";
 
 
 const client = new Client({
-  intents: ["Guilds", "GuildMembers"],
+  intents: ["Guilds"],
 });
 
 declare module "discord.js" {
