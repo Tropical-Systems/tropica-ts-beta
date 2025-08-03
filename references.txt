@@ -1,0 +1,54 @@
+## Event Layout
+
+import {} from 'discord.js';
+
+export default {
+    event: "",
+    execute: async () => {
+        
+    },
+};
+
+## Menu Layout
+
+import { type AnySelectMenuInteraction } from 'discord.js';
+
+export default {
+    event: "",
+    execute: async (interaction: AnySelectMenuInteraction) => {
+        
+    },
+};
+
+## Button Layout
+
+import { type ButtonInteraction} from 'discord.js';
+
+export default {
+    event: "",
+    execute: async (interaction: ButtonInteraction) => {
+        
+    },
+};
+
+## Modal Layout
+
+import { type ModalSubmitInteraction} from 'discord.js';
+
+export default {
+    event: "",
+    execute: async (interaction: ModalSubmitInteraction) => {
+        
+    },
+};
+
+## Slash-Command Layout
+
+import { type ChatInputCommandInteraction} from 'discord.js';
+
+export default {
+    event: "",
+    execute: async (interaction: ChatInputCommandInteraction) => {
+        
+    },
+};
