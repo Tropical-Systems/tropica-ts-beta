@@ -41,7 +41,7 @@ const emojis = {
   customize: "<:customize:1401667260099072070>",
   dollar: "<:dollar:1401667274309505177>",
   filleddollar: "<:filleddollar:1401667294396154007>",
-  filledstar: "<:filledstar:1396133265156476968>",
+  filledstar: "<:filledstar:1401667313199218688>",
   halfstar: "<:halfstar:1401667354127241348>",
   left: "<:left:1401667396921720933>",
   loading: "<:loading:1401667418878775356>",
