@@ -19,7 +19,7 @@ if (!config.botStatusUrl) {
 const TROPICA_HEARTBEAT_URL: string = config!.botStatusUrl;
 
 const client = new Client({
-  intents: ["Guilds", "GuildMembers"],
+  intents: ["Guilds"],
 });
 
 declare module "discord.js" {
