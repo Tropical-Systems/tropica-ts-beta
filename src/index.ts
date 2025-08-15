@@ -10,11 +10,16 @@ import mongoose from "mongoose";
 import config from "./config";
 import guildCreate from "./Events/guildCreate";
 import guildDelete from "./Events/guildDelete";
+import { sendHeartbeat, startStayAliveDb } from "./Functions/startup-functions";
 
+if (!config.botStatusUrl) {
+  throw new Error("TROPICA_HEARTBEAT_URL is not defined in the config file.");
+}
 
+const TROPICA_HEARTBEAT_URL: string = config!.botStatusUrl;
 
 const client = new Client({
-  intents: ["Guilds"],
+  intents: ["Guilds", "GuildMembers"],
 });
 
 declare module "discord.js" {
@@ -32,12 +37,15 @@ client.menus = new Map();
 client.modals = new Map();
 
 client.on("ready", () => {
+  sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
+  setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica"), 5 * 60 * 1000);
   const totalServers = client.guilds.cache.size;
   client.user?.setActivity(`Powering ${totalServers} design servers!`, {
     type: ActivityType.Custom,
   });
 
   registerClientEvents(client);
+  console.log(`${client.user?.tag} is online and ready!`);
 });
 
 client.on("interactionCreate", async (interaction: Interaction) => {
@@ -120,17 +128,6 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 client.on("guildCreate", async (guild) => guildCreate.execute(guild, client));
 client.on("guildDelete", async (guild) => guildDelete.execute(guild, client));
 
-(async () => {
-  if (!config || !config.mongodbUri) {
-    throw new Error("MongoDB URI is not defined in the config file.");
-  }
-  try {
-    await mongoose.connect(config.mongodbUri);
-    console.log("[System]: Connected to MongoDB successfully.");
-  } catch (err) {
-    console.error("[System]: Failed to connect to MongoDB:", err);
-    process.exit(1);
-  }
-})();
+(async () => await startStayAliveDb())();
 
 client.login(config!.token);

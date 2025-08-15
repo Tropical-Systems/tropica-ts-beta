@@ -23,7 +23,7 @@ export const TROPICA_NBG_LOGO_PATH = path.resolve(
 const TROPICA_URL = "https://tropicabot.xyz";
 const TROPICA_STANDARD_TAX = 1.3; // 30%
 
-const { TOKEN, MONGODB_URI, CLIENT_ID, STATUS } = process.env;
+const { TOKEN, MONGODB_URI, CLIENT_ID, STATUS, BOT_STATUS_URL, DB_STATUS_URL } = process.env;
 
 const emojis = {
   alerttriangle: "<:alerttriangle:1401667010164949073>",
@@ -64,6 +64,8 @@ const requiredValues = {
   MONGODB_URI,
   CLIENT_ID,
   STATUS,
+  BOT_STATUS_URL,
+  DB_STATUS_URL,
   ...emojis,
 };
 
@@ -82,4 +84,6 @@ export default {
   tropica_main_leave_logs_id: "1342947016552091699", // Tropica Main leave logs channel ID
   emojis,
   standardTax: TROPICA_STANDARD_TAX,
+  botStatusUrl: BOT_STATUS_URL,
+  dbStatusUrl: DB_STATUS_URL,
 };
