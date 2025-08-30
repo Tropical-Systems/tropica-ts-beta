@@ -48,6 +48,10 @@ export default {
 
     switch (subCommand) {
       case "create":
+        const createdUser = interaction.options.getUser("user", true);
+        const amount = interaction.options.getNumber("amount", true);
+        const reason = interaction.options.getString("reason", false) || "No reason provided.";
+
         await interaction.editReply("Adding credits...");
         break;
 
