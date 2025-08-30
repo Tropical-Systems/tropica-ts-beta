@@ -15,13 +15,13 @@ import {
   TextChannel,
   ThreadAutoArchiveDuration,
 } from "discord.js";
-import ServerConfig from "../Models/Config";
-import miscConfig, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
+import ServerConfig from "../Models/Config.js";
+import miscConfig, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
 import {
   formatDuration,
-} from "../Functions/misc-functions";
-import Order from "../Models/Order";
-import { CInteractionNotInGuild, CNotTextChannelR, CInsufficientPermissionsR, CNotConfiguredR } from "../Functions/interactionReturns";
+} from "../Functions/misc-functions.js";
+import Order from "../Models/Order.js";
+import { CInteractionNotInGuild, CNotTextChannelR, CInsufficientPermissionsR, CNotConfiguredR } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()

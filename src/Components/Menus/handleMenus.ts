@@ -8,8 +8,8 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import ServerConfig from "../../Models/Config";
-import { handleUnauthorizedMenu } from "../../Functions/misc-functions";
+import ServerConfig from "../../Models/Config.js";
+import { handleUnauthorizedMenu } from "../../Functions/misc-functions.js";
 
 // When extra functionality requires additional Menu's use this file to copy and paste the layout. 
 // You'll still need to change the customId on the export default object as otherwise errors can 

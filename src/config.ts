@@ -1,6 +1,5 @@
 import "dotenv/config";
-import path = require("path");
-
+import * as path from "path";
 export const TROPICA_BANNER_PATH = path.resolve(
   process.cwd(),
   "Images",

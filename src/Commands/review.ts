@@ -10,15 +10,15 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
-import ServerConfig, { IConfig } from "../Models/Config";
-import miscConfig, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
+import ServerConfig, { IConfig } from "../Models/Config.js";
+import miscConfig, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
 import {
   generateRandomId,
-} from "../Functions/misc-functions";
-import Review from "../Models/Review";
+} from "../Functions/misc-functions.js";
+import Review from "../Models/Review.js";
 import { ActionRowBuilder } from "@discordjs/builders";
-import ReviewVoid from "../Models/ReviewVoid";
-import { CInsufficientPermissionsR, CInteractionNotInGuild, CMissingRequiredFieldsR, CNotConfiguredR, CNotTextChannelR } from "../Functions/interactionReturns";
+import ReviewVoid from "../Models/ReviewVoid.js";
+import { CInsufficientPermissionsR, CInteractionNotInGuild, CMissingRequiredFieldsR, CNotConfiguredR, CNotTextChannelR } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()

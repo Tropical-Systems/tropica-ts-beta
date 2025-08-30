@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import config from "../config";
+import config from "../config.js";
 import axios from "axios";
 
 const PING_INTERVAL: number = 5 * 60 * 1000; // 5 minutes

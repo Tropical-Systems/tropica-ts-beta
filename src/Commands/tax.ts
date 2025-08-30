@@ -6,11 +6,11 @@ import {
   AttachmentBuilder,
   Client,
 } from "discord.js";
-import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
-import ServerConfig from "../Models/Config";
-import { taxPrice } from "../Functions/misc-functions";
-import miscConfig from "../config";
-import { CInteractionNotInGuild } from "../Functions/interactionReturns";
+import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
+import ServerConfig from "../Models/Config.js";
+import { taxPrice } from "../Functions/misc-functions.js";
+import miscConfig from "../config.js";
+import { CInteractionNotInGuild } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()

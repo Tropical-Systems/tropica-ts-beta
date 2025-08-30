@@ -1,4 +1,4 @@
-import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH, TROPICA_NBG_LOGO_PATH } from "../config";
+import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH, TROPICA_NBG_LOGO_PATH } from "../config.js";
 import { EmbedBuilder } from "@discordjs/builders";
 import {
   AttachmentBuilder,

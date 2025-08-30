@@ -3,7 +3,7 @@ import {
   handleGuildConfigDeletion,
   handleGuildDeletion,
   logGuildDeletion,
-} from "../Functions/misc-functions";
+} from "../Functions/misc-functions.js";
 
 export default {
   event: "guildDelete",

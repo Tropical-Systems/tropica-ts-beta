@@ -1,4 +1,4 @@
-import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../../config";
+import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../../config.js";
 import {
     EmbedBuilder,
     ButtonInteraction,
@@ -9,10 +9,10 @@ import {
     GuildChannel,
 
 } from "discord.js";
-import Review from "../../Models/Review";
-import ReviewVoid from "../../Models/ReviewVoid";
-import Infract from "../../Models/Infract";
-import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BUnexpectedErrorFU } from "../../Functions/interactionReturns";
+import Review from "../../Models/Review.js";
+import ReviewVoid from "../../Models/ReviewVoid.js";
+import Infract from "../../Models/Infract.js";
+import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BUnexpectedErrorFU } from "../../Functions/interactionReturns.js";
 
 export default {
     customId: "t-void-",

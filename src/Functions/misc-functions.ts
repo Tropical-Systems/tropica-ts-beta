@@ -1,4 +1,4 @@
-import TropicaGuild from "../Models/Guild";
+import TropicaGuild from "../Models/Guild.js";
 import {
   Guild,
   CommandInteraction,
@@ -8,8 +8,8 @@ import {
   AttachmentBuilder,
   AnySelectMenuInteraction,
 } from "discord.js";
-import Config from "../Models/Config";
-import config, { TROPICA_LOGO_PATH } from "../config";
+import Config from "../Models/Config.js";
+import config, { TROPICA_LOGO_PATH } from "../config.js";
 
 const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
   name: "tropica-logo.png",

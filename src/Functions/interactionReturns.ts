@@ -1,5 +1,5 @@
 import { ButtonInteraction, ChatInputCommandInteraction, GuildMember, MessageFlags } from "discord.js";
-import config from "../config";
+import config from "../config.js";
 
 export async function CInteractionNotInGuild(interaction: ChatInputCommandInteraction) {
     return await interaction.reply({
