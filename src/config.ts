@@ -85,4 +85,5 @@ export default {
   standardTax: TROPICA_STANDARD_TAX,
   botStatusUrl: BOT_STATUS_URL,
   dbStatusUrl: DB_STATUS_URL,
+  maxCreditAllowedPerAllocation: 2500,
 };
