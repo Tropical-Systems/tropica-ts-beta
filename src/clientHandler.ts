@@ -2,7 +2,13 @@ import "dotenv/config";
 import { REST, Routes, type Client } from "discord.js";
 import * as path from "node:path";
 import * as fs from "node:fs";
-import config from "./config";
+import { fileURLToPath } from "node:url";   // ✅ new
+import config from "./config.js";
+
+// ✅ Define __filename / __dirname manually
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 export async function registerClientEvents(client: Client) {
 
@@ -27,15 +33,19 @@ export async function registerClientEvents(client: Client) {
   for (const command of commandsFolder) {
     const commandFile = await import(`./Commands/${command}`);
 
-    if (!commandFile.default.data || !commandFile.default.execute) {
+    // support default export OR direct export
+    const cmd = commandFile.default ?? commandFile;
+
+    if (!cmd.data || !cmd.execute) {
       skipped.push(`Command: ${command}`);
       continue;
     }
 
-    const commandJSON = commandFile.default.data.toJSON();
-    client.slashCommands.set(commandJSON.name, commandFile.default.execute);
+    const commandJSON = cmd.data.toJSON();
+    client.slashCommands.set(commandJSON.name, cmd.execute);
     commands.push(commandJSON);
   }
+
 
   await rest.put(Routes.applicationCommands(config!.clientId), {
     body: commands,
@@ -52,12 +62,14 @@ export async function registerClientEvents(client: Client) {
   for (const button of buttonsFolder) {
     const buttonFile = await import(`./Components/Buttons/${button}`);
 
-    if (!buttonFile.default.customId || !buttonFile.default.execute) {
+    const btn = buttonFile.default ?? buttonFile;
+
+    if (!btn.customId || !btn.execute) {
       skipped.push(`Button: ${button}`);
       continue;
     }
 
-    client.buttons.set(buttonFile.default.customId, buttonFile.default.execute);
+    client.buttons.set(btn.customId, btn.execute);
   }
 
   // --------------------------
@@ -69,12 +81,14 @@ export async function registerClientEvents(client: Client) {
   for (const menu of menusFolder) {
     const menuFile = await import(`./Components/Menus/${menu}`);
 
-    if (!menuFile.default.customId || !menuFile.default.execute) {
+    const m = menuFile.default ?? menuFile;
+
+    if (!m.customId || !m.execute) {
       skipped.push(`Menu: ${menu}`);
       continue;
     }
 
-    client.menus.set(menuFile.default.customId, menuFile.default.execute);
+    client.menus.set(m.customId, m.execute);
   }
 
   // --------------------------
@@ -86,12 +100,14 @@ export async function registerClientEvents(client: Client) {
   for (const modal of modalsFolder) {
     const modalFile = await import(`./Components/Modals/${modal}`);
 
-    if (!modalFile.default.customId || !modalFile.default.execute) {
+    const mdl = modalFile.default ?? modalFile;
+
+    if (!mdl.customId || !mdl.execute) {
       skipped.push(`Modal: ${modal}`);
       continue;
     }
 
-    client.modals.set(modalFile.default.customId, modalFile.default.execute);
+    client.modals.set(mdl.customId, mdl.execute);
   }
 
   // --------------------------

@@ -1,4 +1,4 @@
-import config from "../../config";
+import config from "../../config.js";
 import {
   EmbedBuilder,
   ActionRowBuilder,
@@ -10,8 +10,8 @@ import {
   GuildMember,
   Message,
 } from "discord.js";
-import ServerConfig from "../../Models/Config";
-import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BNotConfiguredFU } from "../../Functions/interactionReturns";
+import ServerConfig from "../../Models/Config.js";
+import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BNotConfiguredFU } from "../../Functions/interactionReturns.js";
 
 export default {
   customId: "t-order-log",

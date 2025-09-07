@@ -12,18 +12,18 @@ import {
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
-const ms = require("ms");
-import ServerConfig, { IConfig } from "../Models/Config";
-import Order, { IOrder } from "../Models/Order";
+import * as ms from "ms";
+import ServerConfig, { IConfig } from "../Models/Config.js";
+import Order, { IOrder } from "../Models/Order.js";
 import {
   formatDuration,
   generateRandomId,
   handleStringFormattingToWithoutArrow,
   taxPrice,
-} from "../Functions/misc-functions";
-import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
-import miscConfig from "../config";
-import { CInsufficientPermissionsR, CInteractionNotInGuild, CInvalidTimeFormatER, CMissingRequiredFieldsR, CNotConfiguredR, CNotTextChannelERE, CNotTextChannelR, CProvideId, CTypeNotAlreadyVoidedER, CTypeNotFoundER, CUnexpectedErrorER, CUnexpectedErrorR, CUserNotFoundER, CUserNotFoundR } from "../Functions/interactionReturns";
+} from "../Functions/misc-functions.js";
+import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
+import miscConfig from "../config.js";
+import { CInsufficientPermissionsR, CInteractionNotInGuild, CInvalidTimeFormatER, CMissingRequiredFieldsR, CNotConfiguredR, CNotTextChannelERE, CNotTextChannelR, CProvideId, CTypeNotAlreadyVoidedER, CTypeNotFoundER, CUnexpectedErrorER, CUnexpectedErrorR, CUserNotFoundER, CUserNotFoundR } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()

@@ -6,9 +6,9 @@ import {
   ModalSubmitInteraction,
   PermissionFlagsBits,
 } from "discord.js";
-import config, { TROPICA_LOGO_PATH } from "../../config";
-import ServerConfig from "../../Models/Config";
-import { taxPrice } from "../../Functions/misc-functions";
+import config, { TROPICA_LOGO_PATH } from "../../config.js";
+import ServerConfig from "../../Models/Config.js";
+import { taxPrice } from "../../Functions/misc-functions.js";
 
 export default {
   customId: "t",

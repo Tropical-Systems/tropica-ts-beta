@@ -1,6 +1,5 @@
 import "dotenv/config";
-import path = require("path");
-
+import * as path from "path";
 export const TROPICA_BANNER_PATH = path.resolve(
   process.cwd(),
   "Images",
@@ -86,4 +85,5 @@ export default {
   standardTax: TROPICA_STANDARD_TAX,
   botStatusUrl: BOT_STATUS_URL,
   dbStatusUrl: DB_STATUS_URL,
+  maxCreditAllowedPerAllocation: 2500,
 };

@@ -3,7 +3,7 @@ import {
   handleGuildConfigCreation,
   handleGuildCreation,
   logGuildCreation,
-} from "../Functions/misc-functions";
+} from "../Functions/misc-functions.js";
 
 export default {
   event: "guildCreate",

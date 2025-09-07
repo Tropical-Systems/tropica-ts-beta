@@ -1,4 +1,4 @@
-import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../../config";
+import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../../config.js";
 import {
     EmbedBuilder,
     ActionRowBuilder,
@@ -10,8 +10,8 @@ import {
     GuildMember,
     Message,
 } from "discord.js";
-import ServerConfig, { IConfig } from "../../Models/Config";
-import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BNotConfiguredFU, BUnexpectedErrorFU } from "../../Functions/interactionReturns";
+import ServerConfig, { IConfig } from "../../Models/Config.js";
+import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BNotConfiguredFU, BUnexpectedErrorFU } from "../../Functions/interactionReturns.js";
 
 export default {
     customId: "t-qc.",

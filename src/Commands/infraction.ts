@@ -11,14 +11,14 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import ServerConfig, { IConfig } from "../Models/Config";
-import Infract, { I_Infract } from "../Models/Infract";
-import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
+import ServerConfig, { IConfig } from "../Models/Config.js";
+import Infract, { I_Infract } from "../Models/Infract.js";
+import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
 import {
   generateRandomId,
-} from "../Functions/misc-functions";
-import miscConfig from "../config";
-import { CInsufficientPermissionsR, CInteractionNotInGuild, CNotConfiguredR, CProvideId, CUnexpectedErrorER, CUnexpectedErrorR, CUserNotFoundR, CUserNotInGuildR } from "../Functions/interactionReturns";
+} from "../Functions/misc-functions.js";
+import miscConfig from "../config.js";
+import { CInsufficientPermissionsR, CInteractionNotInGuild, CNotConfiguredR, CProvideId, CUnexpectedErrorER, CUnexpectedErrorR, CUserNotFoundR, CUserNotInGuildR } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()

@@ -1,5 +1,5 @@
 import { Client, CommandInteraction, SlashCommandBuilder } from "discord.js";
-import miscConfig from "../config";
+import miscConfig from "../config.js";
 
 export default {
   data: new SlashCommandBuilder()

@@ -1,4 +1,4 @@
-import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
+import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
 import {
   AttachmentBuilder,
   MessageFlags,
@@ -12,7 +12,7 @@ import {
   ChatInputCommandInteraction,
   Client,
 } from "discord.js";
-import { CInsufficientPermissionsR, CInteractionNotInGuild } from "../Functions/interactionReturns";
+import { CInsufficientPermissionsR, CInteractionNotInGuild } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()

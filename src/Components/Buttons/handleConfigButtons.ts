@@ -1,4 +1,4 @@
-import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../../config";
+import config, { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../../config.js";
 import {
     EmbedBuilder,
     StringSelectMenuBuilder,
@@ -14,7 +14,7 @@ import {
     GuildMember,
     PermissionFlagsBits,
 } from "discord.js";
-import { BInsufficientPermissionsFU } from "../../Functions/interactionReturns";
+import { BInsufficientPermissionsFU } from "../../Functions/interactionReturns.js";
 
 export default {
     customId: "t-setting-config.",

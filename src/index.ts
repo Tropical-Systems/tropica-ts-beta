@@ -5,12 +5,12 @@ import {
   type Interaction,
   MessageFlags,
 } from "discord.js";
-import { registerClientEvents } from "./clientHandler";
+import { registerClientEvents } from "./clientHandler.js";
 import mongoose from "mongoose";
-import config from "./config";
-import guildCreate from "./Events/guildCreate";
-import guildDelete from "./Events/guildDelete";
-import { sendHeartbeat, startStayAliveDb } from "./Functions/startup-functions";
+import config from "./config.js";
+import guildCreate from "./Events/guildCreate.js";
+import guildDelete from "./Events/guildDelete.js";
+import { sendHeartbeat, startStayAliveDb } from "./Functions/startup-functions.js";
 
 if (!config.botStatusUrl) {
   throw new Error("TROPICA_HEARTBEAT_URL is not defined in the config file.");
@@ -37,8 +37,8 @@ client.menus = new Map();
 client.modals = new Map();
 
 client.on("ready", () => {
-  sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
-  setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica"), 5 * 60 * 1000);
+  // sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
+  // setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica"), 5 * 60 * 1000);
   const totalServers = client.guilds.cache.size;
   client.user?.setActivity(`Powering ${totalServers} design servers!`, {
     type: ActivityType.Custom,
@@ -128,6 +128,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 client.on("guildCreate", async (guild) => guildCreate.execute(guild, client));
 client.on("guildDelete", async (guild) => guildDelete.execute(guild, client));
 
-(async () => await startStayAliveDb())();
+const URI: string = config!.mongodbUri;
+await mongoose.connect(URI);
+// (async () => await startStayAliveDb())();
 
 client.login(config!.token);

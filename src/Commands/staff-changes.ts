@@ -8,10 +8,10 @@ import {
   Client,
 } from "discord.js";
 
-import ServerConfig, { IConfig } from "../Models/Config";
-import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config";
-import miscConfig from "../config";
-import { CInsufficientPermissionsR, CInteractionNotInGuild, CNotConfiguredR, CNotTextChannelR } from "../Functions/interactionReturns";
+import ServerConfig, { IConfig } from "../Models/Config.js";
+import { TROPICA_BANNER_PATH, TROPICA_LOGO_PATH } from "../config.js";
+import miscConfig from "../config.js";
+import { CInsufficientPermissionsR, CInteractionNotInGuild, CNotConfiguredR, CNotTextChannelR } from "../Functions/interactionReturns.js";
 
 export default {
   data: new SlashCommandBuilder()
