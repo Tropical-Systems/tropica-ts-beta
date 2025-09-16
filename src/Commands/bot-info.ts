@@ -48,7 +48,7 @@ export default {
       .setFields([
         {
           name: "Bot Information",
-          value: `Version: 1.0.1\nServers: ${serverSize}\nOnline Since: <t:${Math.floor(
+          value: `Version: ${config.botVersion}\nServers: ${serverSize}\nOnline Since: <t:${Math.floor(
             readySince
           )}:R>`,
           inline: true,
