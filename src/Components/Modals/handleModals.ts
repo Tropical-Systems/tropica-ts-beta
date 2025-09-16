@@ -65,16 +65,7 @@ export default {
 
 async function handleExclusionModalInput(interaction: ModalSubmitInteraction) {
   const guildId = interaction.customId.split(".")[2];
-  let reason: string;
-  try {
-    reason = interaction.fields.getTextInputValue("t-exclusionModal.reasonInput");
-  } catch (err) {
-    console.error("Failed to get modal input:", err);
-    return interaction.reply({
-      content: "❌ Something went wrong reading your input.",
-      flags: MessageFlags.Ephemeral,
-    });
-  }
+  let reason = interaction.fields.getTextInputValue("t-exclusionModal.reasonInput");;
 
   if (!reason || reason.length < 10) {
     return interaction.reply({
@@ -91,7 +82,7 @@ async function handleExclusionModalInput(interaction: ModalSubmitInteraction) {
   }
 
   if (interaction.guild && interaction.guild.id !== config.tropica_main_id)
-    return await interaction.editReply("goes wrong here");
+    return await interaction.editReply(`${config.emojis.alerttriangle} This modal can only be used in the Tropica Main server by the Executive Board.`);
 
   const member = interaction.member as GuildMember;
   if (!member.roles.cache.has(config.executive_team_role_id) && !member.permissions.has(PermissionFlagsBits.Administrator)) {
