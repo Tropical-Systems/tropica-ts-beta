@@ -8,6 +8,12 @@ export async function CInteractionNotInGuild(interaction: ChatInputCommandIntera
     });
 }
 
+export async function CInteractionNotInGuildER(interaction: ChatInputCommandInteraction) {
+    return await interaction.editReply({
+        content: `${config.emojis.xemoji} This command can only be used in a server.`,
+    });
+}
+
 export async function CInsufficientPermissionsR(interaction: ChatInputCommandInteraction) {
     return await interaction.reply({
         content: `${config.emojis.shield} Insufficient permissions to execute this command. ${config.emojis.shield}`,
@@ -52,6 +58,25 @@ export async function CUserNotInGuildR(interaction: ChatInputCommandInteraction,
     return await interaction.reply({
         content: `${config.emojis.xemoji} The user ${user} is not in this server.`,
         flags: MessageFlags.Ephemeral,
+    });
+}
+
+export async function CUserNotInGuildER(interaction: ChatInputCommandInteraction, user: GuildMember) {
+    return await interaction.editReply({
+        content: `${config.emojis.xemoji} The user ${user} is not in this server.`,
+    });
+}
+
+export async function CExecutorNotInGuildR(interaction: ChatInputCommandInteraction) {
+    return await interaction.reply({
+        content: `${config.emojis.xemoji} You are not a member in this server.`,
+        flags: MessageFlags.Ephemeral,
+    });
+}
+
+export async function CExecutorNotInGuildER(interaction: ChatInputCommandInteraction) {
+    return await interaction.editReply({
+        content: `${config.emojis.xemoji} You are not a member in this server.`,
     });
 }
 
