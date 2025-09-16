@@ -12,7 +12,7 @@ import {
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
-import * as ms from "ms";
+import ms from "ms";
 import ServerConfig, { IConfig } from "../Models/Config.js";
 import Order, { IOrder } from "../Models/Order.js";
 import {
@@ -1111,11 +1111,11 @@ async function handleOrderUpdate(
     if (!durationRegex.test(extraTime)) return await CInvalidTimeFormatER(interaction);
 
     const formatedDuration = formatDuration(extraTime || "");
-    const time = extraTime ? await ms(extraTime) : null;
+    const time = ms(order.estimatedTime as Parameters<typeof ms>[0]);
 
     if (formatedDuration && time) {
       const newCompletionDate = new Date(order.completionDate).getTime() + time;
-      order.completionDate = newCompletionDate;
+      order.completionDate = new Date(Date.now() + time);
       await order.save();
 
       const unixTimeStamp = Math.floor(newCompletionDate / 1000);
@@ -1208,10 +1208,10 @@ async function handleOrderStart(
   }
 
   order.status = "started";
-  const time = await ms(order.estimatedTime);
+  const time = ms(order.estimatedTime as Parameters<typeof ms>[0]);
   const unixTimeStamp = Math.floor((Date.now() + time) / 1000);
 
-  order.completionDate = Date.now() + time;
+  order.completionDate = new Date(Date.now() + time);
 
   try {
     await order.save();

@@ -10,8 +10,8 @@ export interface ICredit extends Document {
 }
 
 const creditSchema = new mongoose.Schema<ICredit>({
-    guildId: { type: String, required: true },
-    userId: { type: String, required: true, unique: true },
+    guildId: { type: String, required: true, unique: true },
+    userId: { type: String, required: true },
     creditPoints: { type: Number, required: true, default: 0 },
 
     lastEdit: { type: Date, required: false, default: null },
