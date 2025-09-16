@@ -1,14 +1,21 @@
 import {
+  ActionRowBuilder,
   AttachmentBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChannelType,
   EmbedBuilder,
   GuildMember,
   MessageFlags,
   ModalSubmitInteraction,
+  NewsChannel,
   PermissionFlagsBits,
+  TextChannel,
 } from "discord.js";
 import config, { TROPICA_LOGO_PATH } from "../../config.js";
 import ServerConfig from "../../Models/Config.js";
 import { taxPrice } from "../../Functions/misc-functions.js";
+import ExcludedGuilds from "../../Models/ExcludedGuilds.js";
 
 export default {
   customId: "t",
@@ -37,6 +44,10 @@ export default {
       name: "tropica-logo.png",
     });
 
+    if (interaction.customId.includes("t-exclusionModal.reason")) {
+      return await handleExclusionModalInput(interaction);
+    }
+
     switch (interaction.customId) {
       case "t-basic-info-modal.color":
         await handleColorChanges(interaction, attachment, guildID);
@@ -50,6 +61,106 @@ export default {
     }
   },
 };
+
+
+async function handleExclusionModalInput(interaction: ModalSubmitInteraction) {
+  const guildId = interaction.customId.split(".")[2];
+  let reason: string;
+  try {
+    reason = interaction.fields.getTextInputValue("t-exclusionModal.reasonInput");
+  } catch (err) {
+    console.error("Failed to get modal input:", err);
+    return interaction.reply({
+      content: "❌ Something went wrong reading your input.",
+      flags: MessageFlags.Ephemeral,
+    });
+  }
+
+  if (!reason || reason.length < 10) {
+    return interaction.reply({
+      content: `${config.emojis.alerttriangle} Please provide a valid reason for excluding this guild (minimum 10 characters).`,
+      flags: MessageFlags.Ephemeral,
+    });
+  }
+
+  try {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  } catch (err) {
+    console.error("Failed to defer reply:", err);
+    return;
+  }
+
+  if (interaction.guild && interaction.guild.id !== config.tropica_main_id)
+    return await interaction.editReply("goes wrong here");
+
+  const member = interaction.member as GuildMember;
+  if (!member.roles.cache.has(config.executive_team_role_id) && !member.permissions.has(PermissionFlagsBits.Administrator)) {
+    return interaction.editReply({
+      content: `${config.emojis.alerttriangle} You do not have permission to exclude guilds.`,
+    });
+  }
+
+  const alreadyExcluded = await ExcludedGuilds.findOne({ guildId: guildId });
+  if (alreadyExcluded) {
+    return interaction.editReply({
+      content: `${config.emojis.alerttriangle} This guild is already excluded.`,
+    });
+  }
+
+  const excludedGuild = await interaction.client.guilds.fetch(guildId).catch(() => null);
+
+  try {
+    const newExclusion = new ExcludedGuilds({ guildId, reason });
+    await newExclusion.save();
+  } catch (err) {
+    console.error("Error while constructing/saving exclusion:", err);
+    return interaction.editReply({
+      content: `${config.emojis.alerttriangle} Failed to construct/save exclusion: ${err}`,
+    });
+  }
+
+
+  let ownerNotified = true;
+  if (excludedGuild) {
+    const firstTextBased = excludedGuild.channels.cache.find(
+      (c): c is TextChannel | NewsChannel =>
+        (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement) &&
+        c.permissionsFor(excludedGuild.members.me!)?.has(PermissionFlagsBits.SendMessages)
+    );
+    if (firstTextBased) {
+      const embed = new EmbedBuilder()
+        .setTitle("Tropica | Guild Excluded")
+        .setDescription(
+          `Dear <@${excludedGuild.ownerId}>,\n\nWe regret to inform you that your server, **${excludedGuild.name}**, has been excluded from using Tropica's services.\n\n**Reason for Exclusion:**\n${reason}\n\nIf you believe this decision was made in error or if you have any questions, please feel free to contact our support team via the invite in my bio.\n\n-# I will now kick myself from this server.\n\nBest regards,\nThe Tropica Team`
+        )
+        .setColor("#FF0000")
+        .setFooter({
+          text: `Tropica | Powered by Tropica`,
+          iconURL: interaction.client.user?.displayAvatarURL() ?? undefined,
+        })
+        .setAuthor({
+          name: "Tropica",
+          iconURL: interaction.client.user?.displayAvatarURL() ?? undefined,
+        })
+        .setTimestamp();
+
+      try {
+        await firstTextBased.send({ content: `<@${excludedGuild.ownerId}>`, embeds: [embed] });
+        await excludedGuild.leave();
+      } catch (err) {
+        ownerNotified = false;
+      }
+    }
+  }
+
+  return interaction.editReply({
+    content: ownerNotified
+      ? `${config.emojis.checkemoji} Successfully excluded the guild (ID: \`${guildId}\`).`
+      : `${config.emojis.checkemoji} Successfully excluded the guild (ID: \`${guildId}\`), but I was unable to send a message to the server owner.`,
+  });
+}
+
+
 
 async function handleTaxInputChange(
   interaction: ModalSubmitInteraction,

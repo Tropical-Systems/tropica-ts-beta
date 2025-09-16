@@ -117,6 +117,23 @@ export default {
           "qc"
         );
         break;
+
+      case "t-setting-config.credit-role":
+        await handleConfigUpdatePanel(
+          interaction,
+          "creditManagerRole",
+          "role",
+          "credit"
+        );
+      break;
+      case "t-setting-config.credit-channel":
+        await handleConfigUpdatePanel(
+          interaction,
+          "creditLogChannel",
+          "channel",
+          "credit"
+        );
+      break;
       case "t-m-basic-info":
         switch (interaction.values[0]) {
           case "t-m-basic-info.color":
@@ -141,7 +158,6 @@ export default {
 
             break;
           case "t-m-basic-info.image":
-            // console.log("[System | SelectMenu]: Image menu selected");
             const imageModal = new ModalBuilder()
               .setCustomId("t-basic-info-modal.image")
               .setTitle("Basic Information Panel: Banner Customization");
@@ -161,7 +177,6 @@ export default {
             await interaction.showModal(imageModal);
             break;
           case "t-m-basic-info.tax":
-            // console.log("[System | SelectMenu]: Tax menu selected");
             const taxModal = new ModalBuilder()
               .setCustomId("t-basic-info-modal.tax")
               .setTitle("Basic Information Panel: Banner Customization");
@@ -208,6 +223,7 @@ async function handleConfigUpdatePanel(
     | "promotion"
     | "demotion"
     | "qc"
+    | "credit",
 ) {
   const guildID = interaction.guild!.id;
   let value = null;
