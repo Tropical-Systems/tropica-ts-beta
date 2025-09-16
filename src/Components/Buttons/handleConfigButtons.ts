@@ -383,9 +383,9 @@ export default {
                         // console.log(`qRow2: ${qRow2.components.length}`);
 
                         const qcContinueButton = new ButtonBuilder()
-                            .setCustomId("t-setting-config.finish") // Fix the 'customId' to match the switch case
+                            .setCustomId("t-setting-config.credit") // Fix the 'customId' to match the switch case
                             .setEmoji("<:rightarrow:1287542697334411325>")
-                            .setLabel("Finish")
+                            .setLabel("Continue")
                             .setStyle(ButtonStyle.Success);
                         const qButtonRow =
                             new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -405,6 +405,65 @@ export default {
                             files,
                         });
                         break;
+
+                    case "t-setting-config.credit":
+                        embed.setDescription(
+                            `Finally, came upon the credit module configuration! With this module, you will be able to set who can manage your server members credits, as well as the channel to log the credit changes!`
+                        )
+                            .setTitle("Tropica Configuration | Panel 8: Credit Settings");
+
+                        const creditManagerRole = new RoleSelectMenuBuilder()
+                            .setCustomId("t-setting-config.credit-role")
+                            .setMaxValues(1)
+                            .setMinValues(1)
+                            .setPlaceholder(
+                                "Choose the Credit Manager role to begin!"
+                            );
+
+                        const creditChannel = new ChannelSelectMenuBuilder()
+                            .setCustomId("t-setting-config.credit-channel")
+                            .setMaxValues(1)
+                            .setMinValues(1)
+                            .setPlaceholder(
+                                "Select a channel to log the credit changes!"
+                            )
+                            .setChannelTypes(ChannelType.GuildText);
+
+                        const cRow1 =
+                            new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
+                                creditManagerRole
+                            );
+
+                        const cRow2 =
+                            new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
+                                creditChannel
+                            );
+
+                        const creditFinishButton = new ButtonBuilder()
+                            .setCustomId("t-setting-config.finish") // Fix the 'customId' to match the switch case
+                            .setLabel("Finish") // TODO: Add emoji here
+                            .setStyle(ButtonStyle.Success);
+
+                        const cButtonRow =
+                            new ActionRowBuilder<ButtonBuilder>().addComponents(
+                                creditFinishButton
+                            );
+
+                        await interaction.editReply({
+                            content: `${config.emojis.checkemoji} Successfully configured the quality control settings!`,
+                            embeds: [],
+                            files: [],
+                            components: [],
+                        });
+                        await interaction.editReply({
+                            content: "",
+                            embeds: [embed],
+                            components: [cRow1, cRow2, cButtonRow],
+                            files,
+                        });
+                        break;
+
+
 
                     case "t-setting-config.finish":
                         interaction.editReply({
