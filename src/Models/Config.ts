@@ -25,6 +25,9 @@ export interface IConfig extends Document {
 
   qcApprover: string | null;
   qcChannel: string | null;
+
+  creditManagerRole: string | null;
+  creditLogChannel: string | null;
 }
 
 const ConfigSchema = new mongoose.Schema<IConfig>({
@@ -50,6 +53,9 @@ const ConfigSchema = new mongoose.Schema<IConfig>({
 
   qcApprover: { type: String, default: null },
   qcChannel: { type: String, default: null },
+
+  creditManagerRole: { type: String, default: null },
+  creditLogChannel: { type: String, default: null }
 });
 
 const Config = mongoose.model<IConfig>("config", ConfigSchema);
