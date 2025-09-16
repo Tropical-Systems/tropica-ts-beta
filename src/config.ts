@@ -78,6 +78,7 @@ export default {
   clientId: CLIENT_ID,
   tropicaUrl: TROPICA_URL,
   status: STATUS,
+  executive_team_role_id: "1265766750994043022",
   tropica_main_id: "1265766606555054142", // Tropica Main support server ID
   tropica_main_join_logs_id: "1278524978840600687", // Tropica Main join logs channel ID
   tropica_main_leave_logs_id: "1342947016552091699", // Tropica Main leave logs channel ID
