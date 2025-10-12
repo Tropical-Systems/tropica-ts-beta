@@ -26,23 +26,25 @@ export default
                 return BInsufficientPermissionsFU(interaction);
             }
 
-            const buttonfetchedGuildID = interaction.customId.split(".")[1];
+            return;
 
-            const exclusionModal = new ModalBuilder()
-                .setCustomId(`t-exclusionModal.reason.${buttonfetchedGuildID}`)
-                .setTitle('Exclude Guild | Reason');
+            // const buttonfetchedGuildID = interaction.customId.split(".")[1];
 
-            const textInput = new TextInputBuilder()
-                .setCustomId(`t-exclusionModal.reasonInput`)
-                .setLabel("Reason for excluding this guild")
-                .setStyle(TextInputStyle.Paragraph)
-                .setMinLength(10)
-                .setMaxLength(200)
-                .setPlaceholder("Enter the reason here...")
-                .setRequired(true);
+            // const exclusionModal = new ModalBuilder()
+            //     .setCustomId(`t-exclusionModal.reason.${buttonfetchedGuildID}`)
+            //     .setTitle('Exclude Guild | Reason');
 
-            const row = new ActionRowBuilder<TextInputBuilder>().addComponents(textInput);
-            exclusionModal.addComponents(row);
-            await interaction.showModal(exclusionModal);
+            // const textInput = new TextInputBuilder()
+            //     .setCustomId(`t-exclusionModal.reasonInput`)
+            //     .setLabel("Reason for excluding this guild")
+            //     .setStyle(TextInputStyle.Paragraph)
+            //     .setMinLength(10)
+            //     .setMaxLength(200)
+            //     .setPlaceholder("Enter the reason here...")
+            //     .setRequired(true);
+
+            // const row = new ActionRowBuilder<TextInputBuilder>().addComponents(textInput);
+            // exclusionModal.addComponents(row);
+            // await interaction.showModal(exclusionModal);
         }
     }

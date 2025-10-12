@@ -44,9 +44,9 @@ export default {
       name: "tropica-logo.png",
     });
 
-    if (interaction.customId.includes("t-exclusionModal.reason")) {
-      return await handleExclusionModalInput(interaction);
-    }
+    // if (interaction.customId.includes("t-exclusionModal.reason")) {
+    //   return await handleExclusionModalInput(interaction);
+    // }
 
     switch (interaction.customId) {
       case "t-basic-info-modal.color":
