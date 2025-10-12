@@ -359,7 +359,7 @@ export default {
                             .setMaxValues(1)
                             .setMinValues(1)
                             .setPlaceholder(
-                                "Choose the Quality Control Approver role to begin!!"
+                                "Choose the Quality Control Approver role to begin!"
                             );
 
                         const qcChannel = new ChannelSelectMenuBuilder()
