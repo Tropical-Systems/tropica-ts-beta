@@ -128,8 +128,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 client.on("guildCreate", async (guild) => guildCreate.execute(guild, client));
 client.on("guildDelete", async (guild) => guildDelete.execute(guild, client));
 
-const URI: string = config!.mongodbUri;
-await mongoose.connect(URI);
+const URI = config?.mongodbUri;
+await mongoose.connect(URI!);
 // (async () => await startStayAliveDb())();
 
 client.login(config!.token);
