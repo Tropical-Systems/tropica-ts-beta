@@ -201,7 +201,7 @@ async function handleCreditCreate(
 
   const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(linkButton);
 
-  var executorResponse = `${miscConfig.emojis.confettiIcon} Allocation successfull!! You have allocated \`${amount}\` credits to ${createdUser}.`
+  var executorResponse = `${miscConfig.emojis.confettiIcon} Allocation successfull! You have allocated \`${amount}\` credits to ${createdUser}.`
   if (errorMessage) {
     executorResponse += `\n\n${miscConfig.emojis.alerttriangle} **Please note the following:**\n${errorMessage}`;
   }
@@ -372,7 +372,7 @@ async function handleCreditRemove(
 
   const removeButtonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(removeLinkButton);
 
-  var removeExecutorResponse = `${miscConfig.emojis.confettiIcon} Removal successfull!! You have removed \`${removeAmount}\` credits from ${removedUser}.`;
+  var removeExecutorResponse = `${miscConfig.emojis.confettiIcon} Removal successfull! You have removed \`${removeAmount}\` credits from ${removedUser}.`;
 
   if (errorMessage) {
     removeExecutorResponse += `\n\n${miscConfig.emojis.alerttriangle} **Please note the following:**\n${errorMessage}`;
