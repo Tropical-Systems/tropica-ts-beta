@@ -130,6 +130,6 @@ client.on("guildDelete", async (guild) => guildDelete.execute(guild, client));
 
 const URI = config?.mongodbUri;
 await mongoose.connect(URI!);
-// (async () => await startStayAliveDb())();
+(async () => await startStayAliveDb())();
 
 client.login(config!.token);

@@ -22,7 +22,8 @@ export const TROPICA_NBG_LOGO_PATH = path.resolve(
 const TROPICA_URL = "https://tropicabot.xyz";
 const TROPICA_STANDARD_TAX = 1.3; // 30%
 
-const { TOKEN, MONGODB_URI, CLIENT_ID, BOT_STATUS_URL, DB_STATUS_URL, VERSION } = process.env;
+const { TOKEN, MONGODB_URI, CLIENT_ID, BOT_STATUS_URL, DB_STATUS_URL } = process.env;
+const VERSION = "1.2.0";
 
 const emojis = {
   alerttriangle: "<:alerttriangle:1401667010164949073>",
