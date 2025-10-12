@@ -152,6 +152,7 @@ export async function logGuildCreation(guild: Guild, client: Client) {
 
 async function handleGuildPossibleExclusion(guild: Guild) {
   return;
+}
 //   try {
 //     const excluded = await ExcludedGuilds.findOne({ guildId: guild.id });
 //     if (!excluded) return;
@@ -189,33 +190,33 @@ async function handleGuildPossibleExclusion(guild: Guild) {
 //   }
 // }
 
-// export async function logGuildDeletion(guild: Guild, client: Client) {
-//   const TropicaMain = client.guilds.cache.get(config.tropica_main_id);
-//   if (!TropicaMain) return;
+export async function logGuildDeletion(guild: Guild, client: Client) {
+  const TropicaMain = client.guilds.cache.get(config.tropica_main_id);
+  if (!TropicaMain) return;
 
-//   if ((await ExcludedGuilds.findOne({ guildId: guild.id }))) return;
+  if ((await ExcludedGuilds.findOne({ guildId: guild.id }))) return;
 
-//   const logChannel = TropicaMain.channels.cache.find(
-//     (channel) => channel.id === config.tropica_main_leave_logs_id
-//   );
-//   if (logChannel && logChannel.isTextBased()) {
-//     const embed = new EmbedBuilder()
-//       .setTitle("Tropica has left a server!")
-//       .setDescription(
-//         `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}`
-//       )
-//       .setTimestamp()
-//       .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png");
+  const logChannel = TropicaMain.channels.cache.find(
+    (channel) => channel.id === config.tropica_main_leave_logs_id
+  );
+  if (logChannel && logChannel.isTextBased()) {
+    const embed = new EmbedBuilder()
+      .setTitle("Tropica has left a server!")
+      .setDescription(
+        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}`
+      )
+      .setTimestamp()
+      .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png");
 
-//     if (!guild.iconURL()) {
-//       await logChannel.send({
-//         embeds: [embed],
-//         files: [attachment],
-//       });
-//     } else {
-//       await logChannel.send({ embeds: [embed], files: [] });
-//     }
-//   }
+    if (!guild.iconURL()) {
+      await logChannel.send({
+        embeds: [embed],
+        files: [attachment],
+      });
+    } else {
+      await logChannel.send({ embeds: [embed], files: [] });
+    }
+  }
 }
 
 export async function handleUnauthorizedMenu(
