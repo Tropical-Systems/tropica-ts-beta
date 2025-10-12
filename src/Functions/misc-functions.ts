@@ -1,15 +1,22 @@
 import TropicaGuild from "../Models/Guild.js";
 import {
   Guild,
-  CommandInteraction,
   MessageFlags,
   Client,
   EmbedBuilder,
   AttachmentBuilder,
   AnySelectMenuInteraction,
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
+  TextChannel,
+  NewsChannel,
+  ChannelType,
+  PermissionFlagsBits,
 } from "discord.js";
 import Config from "../Models/Config.js";
 import config, { TROPICA_LOGO_PATH } from "../config.js";
+import ExcludedGuilds from "../Models/ExcludedGuilds.js";
 
 const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
   name: "tropica-logo.png",
@@ -106,6 +113,12 @@ export async function handleGuildConfigDeletion(guildId: String) {
 export async function logGuildCreation(guild: Guild, client: Client) {
   const TropicaMain = await client.guilds.cache.get(config.tropica_main_id);
   if (!TropicaMain) return;
+
+  if ((await ExcludedGuilds.findOne({ guildId: guild.id })))
+    return await handleGuildPossibleExclusion(guild);
+
+  await handleGuildPossibleExclusion(guild);
+
   const logChannel = TropicaMain.channels.cache.find(
     (channel) => channel.id === config.tropica_main_join_logs_id
   );
@@ -118,20 +131,69 @@ export async function logGuildCreation(guild: Guild, client: Client) {
       .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png")
       .setTimestamp();
 
+    const button = new ButtonBuilder()
+      .setCustomId("t-exclusion-trigger." + guild.id)
+      .setLabel("Exclude Guild (Executive Team Only)")
+      .setStyle(ButtonStyle.Danger);
+
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+
     if (!guild.iconURL()) {
       await logChannel.send({
         embeds: [embed],
         files: [attachment],
+        components: [row],
       });
     } else {
-      await logChannel.send({ embeds: [embed], files: [] });
+      await logChannel.send({ embeds: [embed], files: [], components: [row] });
     }
   }
 }
 
+async function handleGuildPossibleExclusion(guild: Guild) {
+  try {
+    const excluded = await ExcludedGuilds.findOne({ guildId: guild.id });
+    if (!excluded) return;
+
+    const firstTextBased = guild.channels.cache.find(
+      (c): c is TextChannel | NewsChannel =>
+        (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement) &&
+        c.permissionsFor(guild.members.me!)?.has(PermissionFlagsBits.SendMessages)
+    );
+
+    if (firstTextBased) {
+      const embed = new EmbedBuilder()
+        .setTitle("Tropica | Guild Excluded")
+        .setDescription(
+          `Dear members of **${guild.name}**,\n\nThis server has previously been excluded from using Tropica services.\n\n**Reason for Exclusion:**\n${excluded.reason}\n\nBest regards,\nThe Tropica Team`
+        )
+        .setColor("#FF0000")
+        .setFooter({
+          text: "Tropica | Powered by Tropica",
+          iconURL: "attachment://tropica-logo.png",
+        })
+        .setTimestamp();
+
+      const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
+        name: "tropica-logo.png",
+      })
+
+      await firstTextBased.send({ embeds: [embed], files: [attachment] });
+    }
+
+    await guild.leave();
+    console.log(`[System | GuildCreation | Excluded]: Left guild: ${guild.name} (${guild.id})`);
+  } catch (error) {
+    console.error(`[System | Failure]: Failed to handle excluded guild ${guild.id}:`, error);
+  }
+}
+
 export async function logGuildDeletion(guild: Guild, client: Client) {
-  const TropicaMain = await client.guilds.cache.get(config.tropica_main_id);
+  const TropicaMain = client.guilds.cache.get(config.tropica_main_id);
   if (!TropicaMain) return;
+
+  if ((await ExcludedGuilds.findOne({ guildId: guild.id }))) return;
+
   const logChannel = TropicaMain.channels.cache.find(
     (channel) => channel.id === config.tropica_main_leave_logs_id
   );
