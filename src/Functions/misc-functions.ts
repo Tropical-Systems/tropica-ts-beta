@@ -151,70 +151,71 @@ export async function logGuildCreation(guild: Guild, client: Client) {
 }
 
 async function handleGuildPossibleExclusion(guild: Guild) {
-  try {
-    const excluded = await ExcludedGuilds.findOne({ guildId: guild.id });
-    if (!excluded) return;
+  return;
+//   try {
+//     const excluded = await ExcludedGuilds.findOne({ guildId: guild.id });
+//     if (!excluded) return;
 
-    const firstTextBased = guild.channels.cache.find(
-      (c): c is TextChannel | NewsChannel =>
-        (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement) &&
-        c.permissionsFor(guild.members.me!)?.has(PermissionFlagsBits.SendMessages)
-    );
+//     const firstTextBased = guild.channels.cache.find(
+//       (c): c is TextChannel | NewsChannel =>
+//         (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement) &&
+//         c.permissionsFor(guild.members.me!)?.has(PermissionFlagsBits.SendMessages)
+//     );
 
-    if (firstTextBased) {
-      const embed = new EmbedBuilder()
-        .setTitle("Tropica | Guild Excluded")
-        .setDescription(
-          `Dear members of **${guild.name}**,\n\nThis server has previously been excluded from using Tropica services.\n\n**Reason for Exclusion:**\n${excluded.reason}\n\nBest regards,\nThe Tropica Team`
-        )
-        .setColor("#FF0000")
-        .setFooter({
-          text: "Tropica | Powered by Tropica",
-          iconURL: "attachment://tropica-logo.png",
-        })
-        .setTimestamp();
+//     if (firstTextBased) {
+//       const embed = new EmbedBuilder()
+//         .setTitle("Tropica | Guild Excluded")
+//         .setDescription(
+//           `Dear members of **${guild.name}**,\n\nThis server has previously been excluded from using Tropica services.\n\n**Reason for Exclusion:**\n${excluded.reason}\n\nBest regards,\nThe Tropica Team`
+//         )
+//         .setColor("#FF0000")
+//         .setFooter({
+//           text: "Tropica | Powered by Tropica",
+//           iconURL: "attachment://tropica-logo.png",
+//         })
+//         .setTimestamp();
 
-      const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
-        name: "tropica-logo.png",
-      })
+//       const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
+//         name: "tropica-logo.png",
+//       })
 
-      await firstTextBased.send({ embeds: [embed], files: [attachment] });
-    }
+//       await firstTextBased.send({ embeds: [embed], files: [attachment] });
+//     }
 
-    await guild.leave();
-    console.log(`[System | GuildCreation | Excluded]: Left guild: ${guild.name} (${guild.id})`);
-  } catch (error) {
-    console.error(`[System | Failure]: Failed to handle excluded guild ${guild.id}:`, error);
-  }
-}
+//     await guild.leave();
+//     console.log(`[System | GuildCreation | Excluded]: Left guild: ${guild.name} (${guild.id})`);
+//   } catch (error) {
+//     console.error(`[System | Failure]: Failed to handle excluded guild ${guild.id}:`, error);
+//   }
+// }
 
-export async function logGuildDeletion(guild: Guild, client: Client) {
-  const TropicaMain = client.guilds.cache.get(config.tropica_main_id);
-  if (!TropicaMain) return;
+// export async function logGuildDeletion(guild: Guild, client: Client) {
+//   const TropicaMain = client.guilds.cache.get(config.tropica_main_id);
+//   if (!TropicaMain) return;
 
-  if ((await ExcludedGuilds.findOne({ guildId: guild.id }))) return;
+//   if ((await ExcludedGuilds.findOne({ guildId: guild.id }))) return;
 
-  const logChannel = TropicaMain.channels.cache.find(
-    (channel) => channel.id === config.tropica_main_leave_logs_id
-  );
-  if (logChannel && logChannel.isTextBased()) {
-    const embed = new EmbedBuilder()
-      .setTitle("Tropica has left a server!")
-      .setDescription(
-        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}`
-      )
-      .setTimestamp()
-      .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png");
+//   const logChannel = TropicaMain.channels.cache.find(
+//     (channel) => channel.id === config.tropica_main_leave_logs_id
+//   );
+//   if (logChannel && logChannel.isTextBased()) {
+//     const embed = new EmbedBuilder()
+//       .setTitle("Tropica has left a server!")
+//       .setDescription(
+//         `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}`
+//       )
+//       .setTimestamp()
+//       .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png");
 
-    if (!guild.iconURL()) {
-      await logChannel.send({
-        embeds: [embed],
-        files: [attachment],
-      });
-    } else {
-      await logChannel.send({ embeds: [embed], files: [] });
-    }
-  }
+//     if (!guild.iconURL()) {
+//       await logChannel.send({
+//         embeds: [embed],
+//         files: [attachment],
+//       });
+//     } else {
+//       await logChannel.send({ embeds: [embed], files: [] });
+//     }
+//   }
 }
 
 export async function handleUnauthorizedMenu(
