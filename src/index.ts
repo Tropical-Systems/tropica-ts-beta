@@ -37,8 +37,8 @@ client.menus = new Map();
 client.modals = new Map();
 
 client.on("ready", () => {
-  // sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
-  // setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica"), 5 * 60 * 1000);
+  sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
+  setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica"), 5 * 60 * 1000);
   const totalServers = client.guilds.cache.size;
   client.user?.setActivity(`Powering ${totalServers} design servers!`, {
     type: ActivityType.Custom,
