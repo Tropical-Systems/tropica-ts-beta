@@ -619,18 +619,19 @@ async function handleOrderLog(
       },
     ]);
 
-  const orderChannel = await interaction.guild.channels.fetch(
-    `${config.orderLogChannel}`
-  );
+    const orderChannel = await interaction.guild.channels.fetch(config.orderLogChannel).catch(() => null);
 
-  if (
-    !orderChannel ||
-    !orderChannel.isTextBased() ||
-    !(orderChannel instanceof TextChannel)
-  ) {
-    return await handleChannelIsNotTextBasedOrFoundER(interaction);
-  }
-
+    if (!orderChannel) {
+        return await interaction.editReply({
+            content: "This server hasn't been properly configured. Please contact a server administrator.",
+        });
+    }
+    
+    if (!orderChannel.isTextBased() || !(orderChannel instanceof TextChannel)) {
+        return await interaction.editReply({
+            content: "This server hasn't been properly configured. Please contact a server administrator.",
+        });
+    }
   const files = [logo];
 
   if (config && config.bannerUrl && config.color) {
