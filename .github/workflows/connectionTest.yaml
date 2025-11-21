@@ -16,7 +16,7 @@ jobs:
 
       - name: SayHelloWHenOnServer
         run: |
-          if ssh =o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Connected"; then
+          if ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Connected"; then
             echo "Connection succesfull, stopping workflow"
             exit 0
           else
