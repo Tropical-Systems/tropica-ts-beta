@@ -18,8 +18,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint with ESLint (via npx)
-        run: npx eslint . --ext .js,.ts
+      - name: Install ESLint (Temporarily)
+        run: npm install --no-save eslint@8 @typescript-eslint/parser @typescript-eslint/eslint-plugin
+
+      - name: Lint With ESLint
+        run: npx eslint . --ext .ts
 
       - name: Run Testbuild
         run: npm run build
