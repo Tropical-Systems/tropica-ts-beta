@@ -1,15 +1,17 @@
+import tseslint from "@typescript-eslint/eslint-plugin";
+import parser from "@typescript-eslint/parser";
+
 export default [
   {
-    ignores: ["node_modules"],
-  },
-  {
-    files: ["**/*.js", "**/*.ts"],
+    files: ["**/*.ts"],
     languageOptions: {
-      parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-      },
+      parser,
     },
-    rules: {},
+    plugins: {
+      "@typescript-eslint": tseslint,
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
   },
 ];
