@@ -1,0 +1,25 @@
+name: TestConnection
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SHH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: SayHelloWHenOnServer
+        run: |
+          if ssh =o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Connected"; then
+            echo "Connection succesfull, stopping workflow"
+            exit 0
+          else
+            echo "Connection failed"
+            exit 1
+          fi
+  
