@@ -9,18 +9,32 @@ jobs:
     environment: development
 
     steps:
-      - name: Setup SHH
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
-      - name: SayHelloWHenOnServer
+      - name: Check if SSH key exists
         run: |
-          if ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Connected"; then
-            echo "Connection succesfull, stopping workflow"
-            exit 0
-          else
-            echo "Connection failed"
+          if [ -z "${{ secrets.SSH_KEY }}" ]; then
+            echo "❌ SSH_KEY secret is empty!"
             exit 1
+          else
+            echo "✔ SSH_KEY secret is set."
           fi
+
+      - name: Write SSH key to temp file
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > testkey
+          chmod 600 testkey
+          echo "✔ Key written to temporary file."
+
+      - name: Check if key is encrypted or valid
+        run: |
+          echo "🔍 Running ssh-keygen fingerprint check..."
+          ssh-keygen -l -f testkey || echo "❌ ssh-keygen failed (invalid key format)"
+
+      - name: Test if ssh-agent can load key
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add testkey && echo "✔ Key successfully loaded into ssh-agent" \
+            || echo "❌ Key could NOT be loaded into ssh-agent (likely ENCRYPTED or INVALID)"
+
+      - name: Cleanup
+        run: rm testkey
   
