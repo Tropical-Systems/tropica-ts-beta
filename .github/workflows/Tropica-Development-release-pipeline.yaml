@@ -9,30 +9,15 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    environment: development
 
     steps:
-      - name: Download Latest Build Artifact
-        uses: actions/github-script@v7
+      - name: Download latest build artifact
+        uses: actions/download-artifact@v4
         with:
-          script: |
-            const { owner, repo } context.repo;
-            const runId = context.payload.workflow_run.id;
-
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner, repo, run_id: runId
-            });
-
-            const match = artifacts.data.artifacts.find(a => a.name == "...");
-            if(!match) throw new Error("Artifact does not exist");
-
-            const download = await github.rest.actions.downloadArtifact({
-              owner, repo
-              artifact_id: match.id,
-              archive_format: "zip"
-            });
-
-            require('fs).writeFileSync('artifact.zip', Buffer.from(download.data));
-
+          name: 'Tropica-ts-build'
+          path: ./artifact
+      
       - name: Extract Artifact
         run: unzip artifact.zip -d artifact
 
