@@ -22,7 +22,7 @@ jobs:
               owner, repo, run_id: runId
             });
 
-            const match = artifacts.data.artifacts.find(a => a.name == "...");
+            const match = artifacts.data.artifacts.find(a => a.name == "Tropica-ts-build");
             if(!match) throw new Error("Artifact does not exist");
 
             const download = await github.rest.actions.downloadArtifact({
