@@ -9,7 +9,7 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment: development
+    environment: development 
 
     steps:
       - name: Download latest build artifact
