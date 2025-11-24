@@ -12,38 +12,12 @@ jobs:
     environment: development
 
     steps:
-      - name: Download build artifact
-        uses: actions/github-script@v7
+      - name: Download latest build artifact
+        uses: actions/download-artifact@v4
         with:
-          script: |
-            // Get owner and repo
-            const repoInfo = context.repo;
-            const owner = repoInfo.owner;
-            const repo = repoInfo.repo;
-
-            // Get workflow run ID
-            const runId = context.payload.workflow_run.id;
-
-            // List artifacts for this workflow run
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner,
-              repo,
-              run_id: runId
-            });
-
-            const match = artifacts.data.artifacts.find(a => a.name === "ts-build");
-            if (!match) throw new Error("Artifact not found");
-
-            // Download artifact
-            const download = await github.rest.actions.downloadArtifact({
-              owner,
-              repo,
-              artifact_id: match.id,
-              archive_format: 'zip'
-            });
-
-            require('fs').writeFileSync('artifact.zip', Buffer.from(download.data));
-
+          name: 'Tropica-ts-build'
+          path: ./artifact
+      
       - name: Extract Artifact
         run: unzip artifact.zip -d artifact
 
