@@ -48,35 +48,35 @@ jobs:
             ./artifact/ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
 
-      - name: Deploy on OVH server
-        run: |
-          ssh -i ~/.ssh/deploy.key -o StrictHostKeyChecking=no \
-            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+      # - name: Deploy on OVH server
+      #   run: |
+      #     ssh -i ~/.ssh/deploy.key -o StrictHostKeyChecking=no \
+      #       ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             
-            cd /home/ubuntu/Tropica-TS
+      #       cd /home/ubuntu/Tropica-TS
 
-            echo "Stopping PM2 process..."
-            pm2 stop tropica-backend || true
+      #       echo "Stopping PM2 process..."
+      #       pm2 stop tropica-backend || true
 
-            echo "Removing old build and package files..."
-            rm -rf dist
-            rm -f package.json
-            rm -f package-lock.json
+      #       echo "Removing old build and package files..."
+      #       rm -rf dist
+      #       rm -f package.json
+      #       rm -f package-lock.json
 
-            echo "Moving new files into place..."
-            mv new/dist ./dist
-            mv new/package.json .
-            mv new/package-lock.json .
-            mv new/.env .
-            rm -rf new
+      #       echo "Moving new files into place..."
+      #       mv new/dist ./dist
+      #       mv new/package.json .
+      #       mv new/package-lock.json .
+      #       mv new/.env .
+      #       rm -rf new
 
-            echo "Installing production dependencies..."
-            npm ci --omit=dev
+      #       echo "Installing production dependencies..."
+      #       npm ci --omit=dev
 
-            echo "Starting PM2 process..."
-            pm2 start dist/index.js --name tropica-backend
-            pm2 save
+      #       echo "Starting PM2 process..."
+      #       pm2 start dist/index.js --name tropica-backend
+      #       pm2 save
 
-          EOF
+      #     EOF
 
             
