@@ -15,9 +15,9 @@ jobs:
       - name: Download latest Tropica-ts-build artifact
         uses: actions/download-artifact@v4
         with:
-          name: Tropica-ts-build   # artifact name
-          path: ./artifact         # folder where it will be downloaded
-
+          name: Tropica-ts-build
+          path: ./artifact
+          run-id: ${{ github.event.workflow_run.id }}
       
       - name: Extract Artifact
         run: unzip artifact.zip -d artifact
