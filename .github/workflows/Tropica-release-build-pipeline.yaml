@@ -1,0 +1,55 @@
+name: Tropica Development Release Build
+
+on:
+  push: 
+    branches: [ development ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Test Build
+        run: npm run build
+  
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          echo "TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
+          echo "MONGODB_URI=${{ secrets.DatabaseUri }}" >> .env
+          echo "CLIENT_ID=${{ secrets.BOT_CLIENTID }}" >> .env
+          echo "STATUS=${{ secrets.BOT_STATUS }}" >> .env
+          echo "BOT_STATUS_URL=${{ secrets.BETTERSTACK_BOT }}" >> .env
+          echo "DB_STATUS_URL=${{ secrets.BETTERSTACK_DB }}" >> .env
+
+      - name: Run Test Build
+        run: npm run build
+
+      #- name: Upload build artifact
+       # uses: actions/upload-artifact@v4
+        #with:
+         # name: Tropica-Build
+
