@@ -72,15 +72,12 @@ jobs:
 
       - name: Upload build files
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/deploy.key -o StrictHostKeyChecking=no" \
-            dist/ \
-            .env \
-            package.json \
-            package-lock.json \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
-
-
-
+         rsync -avz -e "ssh -i ~/.ssh/deploy.key -p 2222 -o StrictHostKeyChecking=no" \
+          dist/ \
+          .env \
+          package.json \
+          package-lock.json \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
 
 
 
