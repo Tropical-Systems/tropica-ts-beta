@@ -2,7 +2,7 @@ name: Deploy Tropica Beta Build
 
 on: 
   workflow_run:
-    workflows: [ Tropica Development Release Build ]
+    workflows: [ "Tropica Development Release Build" ]
     types: [ completed ]
 
 jobs:
