@@ -49,9 +49,10 @@ jobs:
       - name: Run Test Build
         run: npm run build
 
-      - name: Log deployment on Discord
-        run: |
-          curl -H "Content-Type: application/sjon" \
-            -X POST \
-            -d "{\"content\": \"New deployment started on development.\"}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+       - name: Notify Discord (starting deployment)
+         run: |
+            curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{\"content\": \"🚀 Deployment started on GitHub Actions.\"}" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
+
