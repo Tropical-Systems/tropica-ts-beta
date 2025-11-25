@@ -7,8 +7,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: development # specific to development build
-
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -33,7 +32,8 @@ jobs:
   
   build:
     runs-on: ubuntu-latest
-    
+    environment: development # specific to development build
+
     steps:
       - uses: actions/checkout@v4
 
