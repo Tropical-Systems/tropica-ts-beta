@@ -70,6 +70,10 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy.key
           chmod 600 ~/.ssh/deploy.key
 
+      - name: Test SSH connectivity
+        run: |
+          ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo connected"
+
       - name: Upload build files
         run: |
          rsync -avz -e "ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no" \
