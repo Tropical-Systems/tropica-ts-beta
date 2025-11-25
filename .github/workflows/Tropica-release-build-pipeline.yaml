@@ -49,8 +49,8 @@ jobs:
       - name: Run Test Build
         run: npm run build
 
-       - name: Notify Discord (starting deployment)
-         run: |
+      - name: Notify Discord (starting deployment)
+        run: |
             curl -H "Content-Type: application/json" \
               -X POST \
               -d "{\"content\": \"🚀 Deployment started on GitHub Actions.\"}" \
