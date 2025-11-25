@@ -12,6 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug secret exists
+        run: |
+          if [ -z "${{ secrets.DISCORD_WEBHOOK_URL }}" ]; then
+            echo "Secret is EMPTY";
+          else
+            echo "Secret FOUND (not printing)";
+          fi
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -49,13 +57,7 @@ jobs:
       - name: Run Test Build
         run: npm run build
 
-      - name: Debug secret exists
-        run: |
-          if [ -z "${{ secrets.DISCORD_WEBHOOK_URL }}" ]; then
-            echo "Secret is EMPTY";
-          else
-            echo "Secret FOUND (not printing)";
-          fi
+
 
       - name: Notify Discord (starting deployment)
         run: |
