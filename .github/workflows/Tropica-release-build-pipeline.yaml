@@ -57,13 +57,41 @@ jobs:
       - name: Run Test Build
         run: npm run build
 
-
-
       - name: Notify Discord (starting deployment)
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
           -d "{\"content\": \"🚀 Deployment started on GitHub Actions.\"}" \
           "${{ secrets.DISCORD_WEBHOOK_URL }}"
+      
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy.key
+          chmod 600 ~/.ssh/deploy.key
+
+      - name: Upload build files
+        run: |
+          rsync -avz -e "ssh -i ~/.ssh/deploy.key -o StrictHostKeyChecking=no" \
+            dist/ \
+            .env \
+            package.json \
+            package-lock.json \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
