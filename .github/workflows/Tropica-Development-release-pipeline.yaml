@@ -28,7 +28,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy.key
           chmod 600 ~/.ssh/deploy.key
-
+ 
       - name: Upload build to server
         run: |
           rsync -avz -e "ssh -i ~/.ssh/deploy.key -o StrictHostKeyChecking=no" \
