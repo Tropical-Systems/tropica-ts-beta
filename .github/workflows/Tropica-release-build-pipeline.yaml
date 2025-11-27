@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug secret exists
+      - name: Debug secret existsd
         run: |
           if [ -z "${{ secrets.DISCORD_WEBHOOK_URL }}" ]; then
             echo "Secret is EMPTY";
