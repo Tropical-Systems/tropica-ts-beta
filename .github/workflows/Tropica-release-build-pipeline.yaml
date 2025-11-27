@@ -93,7 +93,7 @@ jobs:
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
             cd ${{ secrets.TARGET_DIR }}/dist &&
             npm ci --production &&
-            pm2 restart tropica-ts-beta || pm2 start index.js --name tropica-ts-beta
+            pm2 restart tropica-ts-beta || pm2 start index.js --name tropica-ts-beta --cwd ${{ secrets.TARGET_DIR }}
             "
   
       # - name: Setup SSH key
