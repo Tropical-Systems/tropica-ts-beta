@@ -73,14 +73,14 @@ jobs:
 
       - name: Test SSH connection
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH OK"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -v "echo SSH OK"
 
       - name: Upload files via rsync
         run: |
           rsync -avz --delete \
           --exclude=".git" \
           --exclude="node_modules" \
-          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" -v \
           ./ \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.TARGET_DIR }}
           
