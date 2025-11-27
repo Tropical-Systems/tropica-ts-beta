@@ -78,13 +78,13 @@ jobs:
           --exclude="node_modules" \
           -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
           ./ \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.TARGET_DIR }}
           
       - name: Install Dependencies in folder
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            cd /home/ubuntu/Tropica-TS-Beta &&
+            cd ${{ secrets.TARGET_DIR }} &&
             npm i --production &&
             pm2 restart tropica-ts-beta || pm2 start server.js --name tropica-ts-beta
             "
