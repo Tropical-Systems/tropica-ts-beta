@@ -47,12 +47,12 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
-          echo "MONGODB_URI=${{ secrets.DatabaseUri }}" >> .env
-          echo "CLIENT_ID=${{ secrets.BOT_CLIENTID }}" >> .env
-          echo "STATUS=${{ secrets.BOT_STATUS }}" >> .env
-          echo "BOT_STATUS_URL=${{ secrets.BETTERSTACK_BOT }}" >> .env
-          echo "DB_STATUS_URL=${{ secrets.BETTERSTACK_DB }}" >> .env
+          echo "TOKEN='${{ secrets.BOT_TOKEN }}'" >> .env
+          echo "MONGODB_URI='${{ secrets.DatabaseUri }}'" >> .env
+          echo "CLIENT_ID='${{ secrets.BOT_CLIENTID }}'" >> .env
+          echo "STATUS='${{ secrets.BOT_STATUS }}'" >> .env
+          echo "BOT_STATUS_URL='${{ secrets.BETTERSTACK_BOT }}'" >> .env
+          echo "DB_STATUS_URL='${{ secrets.BETTERSTACK_DB }}'" >> .env
 
       - name: Run Test Build
         run: npm run build
