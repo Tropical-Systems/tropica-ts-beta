@@ -91,7 +91,7 @@ jobs:
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            cd ${{ secrets.TARGET_DIR }} &&
+            cd ${{ secrets.TARGET_DIR }}/dist &&
             npm ci --production &&
             pm2 restart tropica-ts-beta || pm2 start index.js --name tropica-ts-beta
             "
