@@ -1,5 +1,9 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 import * as path from "path";
+
+// Comment this line when working locally
+dotenv.config({ path: path.resolve("/home/ubuntu/Tropica-TS-Beta/.env") });
+
 export const TROPICA_BANNER_PATH = path.resolve(
   process.cwd(),
   "Images",
