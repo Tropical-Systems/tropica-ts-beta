@@ -80,19 +80,19 @@ jobs:
           
       - name: Upload files via rsync
         run: |
-          rsync -avz --delete \
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
           --exclude=".git" \
           --exclude="node_modules" \
-          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" -v \
+          -e "ssh -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.TARGET_DIR }}
           
       - name: Install Dependencies in folder
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
             cd ${{ secrets.TARGET_DIR }} &&
-            npm i --production &&
+            npm ci --production &&
             pm2 restart tropica-ts-beta || pm2 start server.js --name tropica-ts-beta
             "
   
