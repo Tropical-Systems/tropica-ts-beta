@@ -71,7 +71,24 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      
+      - name: Upload files via rsync
+        run: |
+          rsync -avz --delete \
+          --exclude=".git" \
+          --exclude="node_modules" \
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+          ./ \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta
+          
+      - name: Install Dependencies in folder
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd /home/ubuntu/Tropica-TS-Beta &&
+            npm i --production &&
+            pm2 restart tropica-ts-beta || pm2 start server.js --name tropica-ts-beta
+            "
+  
       # - name: Setup SSH key
       #   run: |
       #     mkdir -p ~/.ssh
