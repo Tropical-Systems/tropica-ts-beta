@@ -76,7 +76,7 @@ jobs:
           rsync -avz --delete \
           --exclude=".git" \
           --exclude="node_modules" \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.TARGET_DIR }}
           
