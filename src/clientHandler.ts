@@ -46,6 +46,11 @@ export async function registerClientEvents(client: Client) {
     commands.push(commandJSON);
   }
 
+  const existingCommands = await rest.get(Routes.applicationCommands(config.clientId));
+
+  for (const cmd of existingCommands) {
+    await rest.delete(Routes.applicationCommand(config!.clientId, cmd.id));
+  }
 
   await rest.put(Routes.applicationCommands(config!.clientId), {
     body: commands,
