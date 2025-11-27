@@ -71,10 +71,13 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Test SSH connection
-        run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -v "cd ${{ secrets.TARGET_DIR }} && echo SSH OK"
+      - name: Install sshpass
+        run: sud apt-get update && sudo apt-get install -y sshpass
 
+      - name: Test SSH conn
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER}}@${{ secrets.SSH_HOST }} "cd ${{ secrets.TARGET_DIR }} && echo SSH OK"
+          
       - name: Upload files via rsync
         run: |
           rsync -avz --delete \
