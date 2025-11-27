@@ -63,25 +63,33 @@ jobs:
           -X POST \
           -d "{\"content\": \"🚀 Deployment started on GitHub Actions.\"}" \
           "${{ secrets.DISCORD_WEBHOOK_URL }}"
-      
-      - name: Setup SSH key
+
+      - name: Install SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy.key
-          chmod 600 ~/.ssh/deploy.key
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Test SSH connectivity
-        run: |
-          ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo connected"
+      
+      # - name: Setup SSH key
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy.key
+      #     chmod 600 ~/.ssh/deploy.key
 
-      - name: Upload build files
-        run: |
-         rsync -avz -e "ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no" \
-          dist/ \
-          .env \
-          package.json \
-          package-lock.json \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
+      # - name: Test SSH connectivity
+      #   run: |
+      #     ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo connected"
+
+      # - name: Upload build files
+      #   run: |
+      #    rsync -avz -e "ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no" \
+      #     dist/ \
+      #     .env \
+      #     package.json \
+      #     package-lock.json \
+      #     ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
 
 
 
