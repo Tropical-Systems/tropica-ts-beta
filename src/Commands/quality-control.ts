@@ -124,7 +124,8 @@ export default {
 
     const qcChannel = await guild.channels.cache.get(requiredChannel);
     const qcDesignerRole = await guild.roles.cache.get(requiredStaffRole);
-    if (!qcChannel || !qcChannel.isTextBased() || !qcDesignerRole) {
+    const qcApprovalRole = await guild.roles.cache.get(requiredRole);
+    if (!qcChannel || !qcChannel.isTextBased() || !qcDesignerRole || !qcApprovalRole) {
       return await interaction.reply({
         content: `${miscConfig.emojis.alerttriangle} The Quality Control Module is not set up correctly. Please contact your server administrators to resolve this issue.`,
         flags: MessageFlags.Ephemeral,
@@ -141,6 +142,7 @@ export default {
           designer,
           qcChannel as TextChannel,
           qcDesignerRole,
+          qcApprovalRole,
           logo,
         );
         break;
@@ -161,6 +163,7 @@ async function handleQcCheck(
   designer: GuildMember,
   qcChannel: TextChannel,
   qcDesignerRole: Role,
+  qcApprovalRole: Role,
   logo: AttachmentBuilder,
 ) {
 
@@ -300,7 +303,7 @@ async function handleQcCheck(
   );
 
   const qcMessage = await qcChannel.send({
-    content: `-# ${qcDesignerRole} & ${designer}`,
+    content: `-# ${qcApprovalRole} | ${designer}`,
     embeds: [MainEmbed],
     files: [logo],
     components: [QcActionRow],
