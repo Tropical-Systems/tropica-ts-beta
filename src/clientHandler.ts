@@ -46,15 +46,7 @@ export async function registerClientEvents(client: Client) {
     commands.push(commandJSON);
   }
 
-  const existingCommands = await rest.get(Routes.applicationCommands(config.clientId));
-
-  for (const cmd of existingCommands) {
-    await rest.delete(Routes.applicationCommand(config!.clientId, cmd.id));
-  }
-
-  await rest.put(Routes.applicationCommands(config!.clientId), {
-    body: commands,
-  });
+  await syncApplicationCommands(commands, rest);
 
   console.log(`Slash command registering has been completed.`);
 
@@ -122,4 +114,53 @@ export async function registerClientEvents(client: Client) {
     console.log(`The following files were skipped:`, skipped);
   }
   // --------------------------
+}
+
+
+async function syncApplicationCommands(commands: any, rest: REST) {
+  const clientId = config!.clientId!;
+
+  const existing = await rest.get(Routes.applicationCommands(clientId)) as any[];
+
+  const existingMap = new Map(existing.map(cmd => [cmd.name, cmd]));
+
+  if (existingMap.keys.length === 0) {
+    console.log(`[System | Command Synchronization] No existing command found.]`);
+  }
+
+  for (const cmd of commands) {
+    const previous = existingMap.get(cmd.name);
+
+    if (!previous) {
+      console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Creating command - ${cmd.name}`);
+
+      await rest.post(
+        Routes.applicationCommands(clientId),
+        { body: cmd }
+      );
+    } else {
+      console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Updating command - ${cmd.name}`);
+
+      await rest.patch(
+        Routes.applicationCommand(clientId, previous.id),
+        { body: cmd }
+      );
+    }
+  }
+
+  console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Checking for deleted commands...`);
+
+  for (const existingCmd of existing) {
+    const isEntryPoint = existingCmd.application_command_entry_point;
+    const stillExists = commands.some((cItem: any) => cItem.name === existingCmd.name);
+
+    if (!stillExists && !isEntryPoint) {
+      console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Deleting command - ${existingCmd.name}`);
+      await rest.delete(
+        Routes.applicationCommand(clientId, existingCmd.id)
+      );
+    }
+  }
+
+  console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Command synchronization complete.`);
 }

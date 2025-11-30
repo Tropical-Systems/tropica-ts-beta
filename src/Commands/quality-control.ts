@@ -123,8 +123,8 @@ export default {
     }
 
     const qcChannel = await guild.channels.cache.get(requiredChannel);
-    const qcRole = await guild.roles.cache.get(requiredRole);
-    if (!qcChannel || !qcChannel.isTextBased() || !qcRole) {
+    const qcDesignerRole = await guild.roles.cache.get(requiredStaffRole);
+    if (!qcChannel || !qcChannel.isTextBased() || !qcDesignerRole) {
       return await interaction.reply({
         content: `${miscConfig.emojis.alerttriangle} The Quality Control Module is not set up correctly. Please contact your server administrators to resolve this issue.`,
         flags: MessageFlags.Ephemeral,
@@ -140,7 +140,7 @@ export default {
           orderId,
           designer,
           qcChannel as TextChannel,
-          qcRole,
+          qcDesignerRole,
           logo,
         );
         break;
@@ -160,7 +160,7 @@ async function handleQcCheck(
   orderId: number | null,
   designer: GuildMember,
   qcChannel: TextChannel,
-  qcRole: Role,
+  qcDesignerRole: Role,
   logo: AttachmentBuilder,
 ) {
 
@@ -181,7 +181,7 @@ async function handleQcCheck(
 
   // Case 1: executor is the designer themself
   if (executor.id === designer.id) {
-    if (!designer.roles.cache.has(qcRole.id)) {
+    if (!designer.roles.cache.has(qcDesignerRole.id)) {
       return await CInsufficientPermissionsR(interaction);
     }
   } else {
@@ -189,7 +189,7 @@ async function handleQcCheck(
     if (!executor.permissions.has(PermissionFlagsBits.ManageGuild)) {
       return await CInsufficientPermissionsR(interaction);
     }
-    if (!designer.roles.cache.has(qcRole.id)) {
+    if (!designer.roles.cache.has(qcDesignerRole.id)) {
       return await interaction.reply({
         content: `${miscConfig.emojis.alerttriangle} The specified designer does not have the required QC role.`,
         flags: MessageFlags.Ephemeral,
@@ -300,7 +300,7 @@ async function handleQcCheck(
   );
 
   const qcMessage = await qcChannel.send({
-    content: `-# ${qcRole} & ${designer}`,
+    content: `-# ${qcDesignerRole} & ${designer}`,
     embeds: [MainEmbed],
     files: [logo],
     components: [QcActionRow],
