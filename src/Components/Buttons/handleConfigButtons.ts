@@ -15,6 +15,7 @@ import {
     PermissionFlagsBits,
 } from "discord.js";
 import { BInsufficientPermissionsFU } from "../../Functions/interactionReturns.js";
+import { Logger, LogType } from "../../Functions/Logger.js";
 
 export default {
     customId: "t-setting-config.",
@@ -104,12 +105,10 @@ export default {
                             new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
                                 selectMenu
                             );
-                        // console.log(`Basic menu: ${basicInfoMenu.components.length}`);
 
                         const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
                             continueButton
                         );
-                        // console.log(`buttons: ${buttons.components.length}`);
 
                         await interaction.editReply({
                             embeds: [embed],
@@ -146,14 +145,11 @@ export default {
                             new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
                                 roleSelection
                             );
-                        // console.log(`Rolerow: ${roleRow.components.length}`);
 
                         const channelRow =
                             new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
                                 channelSelection
                             );
-
-                        // console.log(`ChannelRow: ${channelRow.components.length}`);
 
                         const infractContinueButton = new ButtonBuilder()
                             .setCustomId("t-setting-config.continue-2")
@@ -166,7 +162,6 @@ export default {
                                 infractContinueButton
                             );
 
-                        // console.log(`ButtonRow2: ${buttonRow2.components.length}`);
                         await interaction.editReply({
                             embeds: [embed],
                             files,
@@ -199,12 +194,10 @@ export default {
                                 reviewRoleSelect
                             );
 
-                        // console.log(`Rolerow1: ${rRow1.components.length}`);
                         const rRow2 =
                             new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
                                 reviewChannelSelect
                             );
-                        // console.log(`Rolerow2: ${rRow2.components.length}`);
 
                         const reviewContinueButton = new ButtonBuilder()
                             .setCustomId("t-setting-config.continue-3")
@@ -215,9 +208,6 @@ export default {
                             new ActionRowBuilder<ButtonBuilder>().addComponents(
                                 reviewContinueButton
                             );
-                        // console.log(`ButtoRnRow3: ${rButtonRow.components.length}`);
-
-
 
                         await interaction.editReply({
                             content: `${config.emojis.checkemoji} Successfully configured the infraction settings!`,
@@ -247,12 +237,10 @@ export default {
                             .setPlaceholder("Select a channel to log the orders!")
                             .setChannelTypes(ChannelType.GuildText);
 
-                        // console.log(`oRow1: ${oRow1.components.length}`);
                         const oRow2 =
                             new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
                                 orderChannelSelect
                             );
-                        // console.log(`oRow2: ${oRow2.components.length}`);
 
                         const orderContinueButton = new ButtonBuilder()
 
@@ -272,7 +260,7 @@ export default {
                             files: [],
                             components: [],
                         });
-                        // console.log(`oButtonRow: ${oButtonRow.components.length}`);
+
                         await interaction.editReply({
                             content: "",
                             embeds: [embed],
@@ -311,20 +299,19 @@ export default {
                             new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
                                 staffManagerRole
                             );
-                        // console.log(`sRoFw1: ${sRow1.components.length}`);
+
                         const sRow2 =
                             new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
                                 promotionLogs
                             );
-                        // console.log(`sRow2F: ${sRow2.components.length}`);
-                        const sRow3 =
+
+                            const sRow3 =
                             new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
                                 demotionLogs
                             );
-                        // console.log(`sRow3F: ${sRow3.components.length}`);
 
                         const staffContinueButton = new ButtonBuilder()
-                            .setCustomId("t-setting-config.continue-5") // Fix the 'customId' to match the switch case
+                            .setCustomId("t-setting-config.continue-5") 
                             .setEmoji("<:rightarrow:1287542697334411325>")
                             .setLabel("Continue")
                             .setStyle(ButtonStyle.Success);
@@ -332,7 +319,6 @@ export default {
                             new ActionRowBuilder<ButtonBuilder>().addComponents(
                                 staffContinueButton
                             );
-                        // console.log(`sButtonRowF: ${sButtonRow.components.length}`);
                         await interaction.editReply({
                             content: `${config.emojis.checkemoji} Successfully configured the order settings!`,
                             embeds: [],
@@ -375,15 +361,14 @@ export default {
                             new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
                                 qcApprover
                             );
-                        // console.log(`qRow1: ${qRow1.components.length}`);
+
                         const qRow2 =
                             new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
                                 qcChannel
                             );
-                        // console.log(`qRow2: ${qRow2.components.length}`);
 
                         const qcContinueButton = new ButtonBuilder()
-                            .setCustomId("t-setting-config.credit") // Fix the 'customId' to match the switch case
+                            .setCustomId("t-setting-config.credit") 
                             .setEmoji("<:rightarrow:1287542697334411325>")
                             .setLabel("Continue")
                             .setStyle(ButtonStyle.Success);
@@ -391,7 +376,6 @@ export default {
                             new ActionRowBuilder<ButtonBuilder>().addComponents(
                                 qcContinueButton
                             );
-                        // console.log(`qButtonsdRow: ${qButtonRow.components.length}`);
                         await interaction.editReply({
                             content: `${config.emojis.checkemoji} Successfully configured the staff settings!`,
                             embeds: [],
@@ -476,10 +460,10 @@ export default {
                 }
             }
             else {
-                console.log("Unable to handle custom ID:", interaction.customId);
+                Logger.log(LogType.Error, `Unhandled custom ID: ${interaction.customId}`);
             }
         } catch (err) {
-            console.error(err);
+            Logger.log(LogType.Error, `Error processing interaction: ${err}`);
             return await interaction.editReply({
                 content:
                     `${config.emojis.xemoji} An error occurred while processing your request. Please try again later.`,

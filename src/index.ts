@@ -11,6 +11,8 @@ import config from "./config.js";
 import guildCreate from "./Events/guildCreate.js";
 import guildDelete from "./Events/guildDelete.js";
 import { sendHeartbeat, startStayAliveDb } from "./Functions/startup-functions.js";
+import { Logger, LogType } from "./Functions/Logger.js";
+import { setActivityStatus } from "./Functions/misc-functions.js";
 
 if (!config.botStatusUrl) {
   throw new Error("TROPICA_HEARTBEAT_URL is not defined in the config file.");
@@ -39,13 +41,12 @@ client.modals = new Map();
 client.on("ready", () => {
   sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
   setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica"), 5 * 60 * 1000);
-  const totalServers = client.guilds.cache.size;
-  client.user?.setActivity(`Powering ${totalServers} design servers!`, {
-    type: ActivityType.Custom,
-  });
+  
+  setActivityStatus(client);
+  setInterval(() => setActivityStatus(client), 24 * 60 * 60 * 1000); // Update every 24 hours
 
   registerClientEvents(client);
-  console.log(`${client.user?.tag} is online and ready!`);
+  Logger.log(LogType.StartUp, `${client.user?.tag} is online and ready!`);
 });
 
 client.on("interactionCreate", async (interaction: Interaction) => {

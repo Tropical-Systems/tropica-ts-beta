@@ -13,13 +13,19 @@ import {
   NewsChannel,
   ChannelType,
   PermissionFlagsBits,
+  ActivityType,
 } from "discord.js";
 import Config from "../Models/Config.js";
-import config, { TROPICA_LOGO_PATH } from "../config.js";
+import config, { TROPICA_LOGO_PATH, DISCORD_LOGO_PATH } from "../config.js";
 import ExcludedGuilds from "../Models/ExcludedGuilds.js";
+import { Logger, LogType } from "./Logger.js";
 
 const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
   name: "tropica-logo.png",
+});
+
+const discordAttachment = new AttachmentBuilder(DISCORD_LOGO_PATH, {
+  name: "discord-logo-christmas.png",
 });
 
 export async function handleGuildConfigCreation(guildId: String) {
@@ -45,14 +51,10 @@ export async function handleGuildConfigCreation(guildId: String) {
       qcApprover: null,
       qcChannel: null,
     });
-    console.log(
-      `[System | GuildCreation]: Created config for guild ${guildId}`
-    );
+    Logger.log(LogType.GuildConfigCreation, `Created config for guild ${guildId}`);
     await newConfig.save();
   } else {
-    console.log(
-      `[System | GuildCreation]: Config for guild ${guildId} already exists.`
-    );
+    Logger.log(LogType.Warning, `Config for guild ${guildId} already exists. Skipping this task.`);
   }
 }
 
@@ -70,17 +72,15 @@ export async function handleGuildCreation(guild: Guild) {
       guildIcon: guildIcon,
       guildBanner: guildBanner,
     });
-    console.log(`[System | GuildCreation]: Created guild ${guildName}`);
+    Logger.log(LogType.GuildCreation, `Created guild ${guildName}`);
     await newGuild.save();
   } else {
-    console.log(`[System | GuildCreation]: Guild ${guildName} already exists.`);
+    Logger.log(LogType.GuildCreation, `Guild ${guildName} already exists.`);
     existingGuild.guildName = guildName;
     existingGuild.guildIcon = guildIcon;
     existingGuild.guildBanner = guildBanner;
     await existingGuild.save();
-    console.log(
-      `[System | GuildCreation]: Updated guild ${guildName} information.`
-    );
+    Logger.log(LogType.GuildCreation, `Updated guild ${guildName} information.`);
   }
 }
 
@@ -88,11 +88,9 @@ export async function handleGuildDeletion(guildId: String) {
   const existingGuild = await TropicaGuild.findOne({ guildId: guildId });
   if (existingGuild) {
     await TropicaGuild.deleteOne({ guildId: guildId });
-    console.log(`[System | GuildDeletion]: Deleted guild with ID ${guildId}`);
+    Logger.log(LogType.GuildDeletion, `Deleted guild with ID ${guildId}`);
   } else {
-    console.log(
-      `[System | GuildDeletion]: Guild with ID ${guildId} does not exist.`
-    );
+    Logger.log(LogType.GuildDeletion, `Guild with ID ${guildId} does not exist.`);
   }
 }
 
@@ -100,13 +98,9 @@ export async function handleGuildConfigDeletion(guildId: String) {
   const existingConfig = await Config.findOne({ guildId: guildId });
   if (existingConfig) {
     await Config.deleteOne({ guildId: guildId });
-    console.log(
-      `[System | GuildDeletion]: Deleted config for guild ${guildId}`
-    );
+    Logger.log(LogType.GuildConfigDeletion, `Deleted config for guild ${guildId}`);
   } else {
-    console.log(
-      `[System | GuildDeletion]: Config for guild ${guildId} does not exist.`
-    );
+    Logger.log(LogType.GuildConfigDeletion, `Config for guild ${guildId} does not exist.`);
   }
 }
 
@@ -126,9 +120,9 @@ export async function logGuildCreation(guild: Guild, client: Client) {
     const embed = new EmbedBuilder()
       .setTitle("Tropica has joined a new server!")
       .setDescription(
-        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** \`${guild.id}\`\n\n**Our new total servers:** ${client.guilds.cache.size}`
+        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** \`${guild.id}\`\n**Member count:** ${guild.memberCount}\n\n**Our new total servers:** ${client.guilds.cache.size}\n**Total members across all servers:** ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}`
       )
-      .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png")
+      .setThumbnail(guild.iconURL() ?? "attachment://discord-logo-christmas.png")
       .setTimestamp();
 
     const button = new ButtonBuilder()
@@ -141,13 +135,20 @@ export async function logGuildCreation(guild: Guild, client: Client) {
     if (!guild.iconURL()) {
       await logChannel.send({
         embeds: [embed],
-        files: [attachment],
+        files: [discordAttachment],
         components: [row],
       });
     } else {
       await logChannel.send({ embeds: [embed], files: [], components: [row] });
     }
   }
+}
+
+export function setActivityStatus(client: Client) {
+  const totalServers = client.guilds.cache.size;
+  client.user?.setActivity(`Powering ${totalServers} design servers!`, {
+    type: ActivityType.Custom,
+  });
 }
 
 async function handleGuildPossibleExclusion(guild: Guild) {
@@ -184,9 +185,9 @@ async function handleGuildPossibleExclusion(guild: Guild) {
 //     }
 
 //     await guild.leave();
-//     console.log(`[System | GuildCreation | Excluded]: Left guild: ${guild.name} (${guild.id})`);
+//     Logger.log(LogType.GuildCreation, `Left guild: ${guild.name} (${guild.id})`);
 //   } catch (error) {
-//     console.error(`[System | Failure]: Failed to handle excluded guild ${guild.id}:`, error);
+//     Logger.log(LogType.Error, `Failed to handle excluded guild ${guild.id}: ${error}`);
 //   }
 // }
 
@@ -203,15 +204,15 @@ export async function logGuildDeletion(guild: Guild, client: Client) {
     const embed = new EmbedBuilder()
       .setTitle("Tropica has left a server!")
       .setDescription(
-        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}`
+        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}\n**Total members across all servers:** ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}`
       )
       .setTimestamp()
-      .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png");
+      .setThumbnail(guild.iconURL() || "attachment://discord-logo-christmas.png");
 
     if (!guild.iconURL()) {
       await logChannel.send({
         embeds: [embed],
-        files: [attachment],
+        files: [discordAttachment],
       });
     } else {
       await logChannel.send({ embeds: [embed], files: [] });

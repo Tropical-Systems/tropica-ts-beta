@@ -21,6 +21,8 @@ export default {
       });
     }
 
+    const tempSupportServerLink = "https://discord.gg/Dufn32Vhuj"; // Temp until website is live, then it'll be migrated to that.
+
     const readySince = client.readyTimestamp / 1000;
     const serverSize = interaction.client.guilds.cache.size;
     const url = config.tropicaUrl;
@@ -55,7 +57,7 @@ export default {
         },
         {
           name: "Links",
-          value: `[Dashboard](${url}{/dashboard/${guildId})\n[Support Server](${url}/support)\n[Invite Tropica](${url}/invite)\n[Get Premium](${url}/premium)`,
+          value: `[Dashboard](${url}{/dashboard/${guildId})\n[Support Server](${tempSupportServerLink})\n[Invite Tropica](${url}/invite)\n[Get Premium](${url}/premium)`,
           inline: true,
         },
       ])

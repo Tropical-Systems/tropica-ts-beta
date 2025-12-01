@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import config from "../config.js";
 import axios from "axios";
+import { Logger, LogType } from "./Logger.js";
 
 const PING_INTERVAL: number = 5 * 60 * 1000; // 5 minutes
 
@@ -18,10 +19,9 @@ export async function startStayAliveDb() {
 
     try {
         await mongoose.connect(config.mongodbUri);
-        console.log("[System]: Connected to MongoDB successfully.");
-        // Immediately send first heartbeat
+        Logger.log(LogType.StartUp, "Connected to MongoDB successfully.");
+
         await sendHeartbeat(DB_HEARTBEAT_URL, "database");
-        // Schedule recurring heartbeat
         setInterval(() => sendHeartbeat(DB_HEARTBEAT_URL, "database"), PING_INTERVAL);
 
     } catch (err) {
@@ -31,12 +31,11 @@ export async function startStayAliveDb() {
 }
 
 export async function sendHeartbeat(url: string, type: string) {
-    console.log(`Pinging BetterStack (${type})...`);
+    Logger.log(LogType.BetterStackStatusUpdate, `Pinging BetterStack (${type})...`);
     try {
         await axios.get(url);
-        console.log(`Successfully pinged BetterStack (${type})`);
+        Logger.log(LogType.BetterStackStatusUpdate, `Successfully pinged BetterStack (${type})`);
     } catch (error) {
-        console.error(`Failed to ping BetterStack (${type}):`, error);
+        Logger.log(LogType.BetterStackStatusUpdate, `Failed to ping BetterStack (${type}): ${error}`);
     }
 }
-
