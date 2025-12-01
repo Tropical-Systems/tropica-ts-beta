@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import ServerConfig from "../../Models/Config.js";
 import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BNotConfiguredFU } from "../../Functions/interactionReturns.js";
+import { Logger, LogType } from "../../Functions/Logger.js";
 
 export default {
   customId: "t-order-log",
@@ -23,10 +24,10 @@ export default {
       if (interaction.customId.includes("t-order-log-paid.")) {
         return await handleOrderLogPaid(interaction);
       } else {
-        console.log("Unable to handle custom ID:", interaction.customId);
+        Logger.log(LogType.Error, `Unhandled custom ID: ${interaction.customId}`);
       }
     } catch (err) {
-      console.error(err);
+      Logger.log(LogType.Error, `Error processing interaction: ${err}`);
       return await interaction.editReply({
         content:
           `${config.emojis.xemoji} An error occurred while processing your request. Please try again later.`,

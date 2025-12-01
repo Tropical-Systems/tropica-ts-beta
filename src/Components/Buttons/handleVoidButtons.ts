@@ -13,6 +13,7 @@ import Review from "../../Models/Review.js";
 import ReviewVoid from "../../Models/ReviewVoid.js";
 import Infract from "../../Models/Infract.js";
 import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BUnexpectedErrorFU } from "../../Functions/interactionReturns.js";
+import { Logger, LogType } from "../../Functions/Logger.js";
 
 export default {
     customId: "t-void-",
@@ -247,7 +248,7 @@ export default {
                 }
             }
             else {
-                console.log("Unable to handle custom ID:", interaction.customId);
+                Logger.log(LogType.Error, `Unhandled custom ID: ${interaction.customId}`);
             }
         } catch { return await BUnexpectedErrorFU(interaction) }
     },

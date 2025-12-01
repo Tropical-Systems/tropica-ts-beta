@@ -4,6 +4,7 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 import { fileURLToPath } from "node:url";   // ✅ new
 import config from "./config.js";
+import { Logger, LogType } from "./Functions/Logger.js";
 
 // ✅ Define __filename / __dirname manually
 const __filename = fileURLToPath(import.meta.url);
@@ -48,8 +49,7 @@ export async function registerClientEvents(client: Client) {
 
   await syncApplicationCommands(commands, rest);
 
-  console.log(`Slash command registering has been completed.`);
-
+  Logger.log(LogType.StartUp, `Registered ${client.slashCommands.size} slash commands.`);
   // --------------------------
 
   const buttonsFolder = fs
@@ -108,10 +108,10 @@ export async function registerClientEvents(client: Client) {
   }
 
   // --------------------------
-  console.log(`Component registering has been completed.`);
+  Logger.log(LogType.StartUp, `Registered ${client.buttons.size} buttons.`);
 
   if (skipped.length >= 1) {
-    console.log(`The following files were skipped:`, skipped);
+    Logger.log(LogType.Warning, `Some components were skipped during registration:\n${skipped.join("; ")}`);
   }
   // --------------------------
 }
@@ -125,21 +125,21 @@ async function syncApplicationCommands(commands: any, rest: REST) {
   const existingMap = new Map(existing.map(cmd => [cmd.name, cmd]));
 
   if (existingMap.keys.length === 0) {
-    console.log(`[System | Command Synchronization] No existing command found.]`);
+    Logger.log(LogType.CommandSync, "No commands found to synchronize.");
   }
 
   for (const cmd of commands) {
     const previous = existingMap.get(cmd.name);
 
     if (!previous) {
-      console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Creating command - ${cmd.name}`);
+      Logger.log(LogType.CommandSync, `Creating command - ${cmd.name}`);
 
       await rest.post(
         Routes.applicationCommands(clientId),
         { body: cmd }
       );
     } else {
-      console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Updating command - ${cmd.name}`);
+      Logger.log(LogType.CommandSync, `Updating command - ${cmd.name}`);
 
       await rest.patch(
         Routes.applicationCommand(clientId, previous.id),
@@ -148,19 +148,19 @@ async function syncApplicationCommands(commands: any, rest: REST) {
     }
   }
 
-  console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Checking for deleted commands...`);
+  Logger.log(LogType.CommandSync, "Checking for deleted commands...");
 
   for (const existingCmd of existing) {
     const isEntryPoint = existingCmd.application_command_entry_point;
     const stillExists = commands.some((cItem: any) => cItem.name === existingCmd.name);
 
     if (!stillExists && !isEntryPoint) {
-      console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Deleting command - ${existingCmd.name}`);
+      Logger.log(LogType.CommandSync, `Deleting command - ${existingCmd.name}`);
       await rest.delete(
         Routes.applicationCommand(clientId, existingCmd.id)
       );
     }
   }
 
-  console.log(`[System | Command Synchronization] ${new Date().toISOString()}: Command synchronization complete.`);
+  Logger.log(LogType.CommandSync, "Initial Command synchronization complete.");
 }

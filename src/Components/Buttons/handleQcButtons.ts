@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import ServerConfig, { IConfig } from "../../Models/Config.js";
 import { BInsufficientPermissionsFU, BInteractionNotInGuildFU, BNotConfiguredFU, BUnexpectedErrorFU } from "../../Functions/interactionReturns.js";
+import { Logger, LogType } from "../../Functions/Logger.js";
 
 export default {
     customId: "t-qc.",
@@ -72,12 +73,12 @@ export default {
                 }
             }
             else {
-                console.log("Unable to handle custom ID:", interaction.customId);
+                Logger.log(LogType.Error, `Unhandled custom ID: ${interaction.customId}`);
             }
-        } catch (err) { 
-            
-            console.error("Error handling QC button interaction:", err);
-            return await BUnexpectedErrorFU(interaction) }
+        } catch (err) {
+            Logger.log(LogType.Error, `Error handling QC button interaction: ${err}`);
+            return await BUnexpectedErrorFU(interaction)
+        }
     },
 };
 
