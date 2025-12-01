@@ -13,14 +13,19 @@ import {
   NewsChannel,
   ChannelType,
   PermissionFlagsBits,
+  ActivityType,
 } from "discord.js";
 import Config from "../Models/Config.js";
-import config, { TROPICA_LOGO_PATH } from "../config.js";
+import config, { TROPICA_LOGO_PATH, DISCORD_LOGO_PATH } from "../config.js";
 import ExcludedGuilds from "../Models/ExcludedGuilds.js";
 import { Logger, LogType } from "./Logger.js";
 
 const attachment = new AttachmentBuilder(TROPICA_LOGO_PATH, {
   name: "tropica-logo.png",
+});
+
+const discordAttachment = new AttachmentBuilder(DISCORD_LOGO_PATH, {
+  name: "discord-logo-christmas.png",
 });
 
 export async function handleGuildConfigCreation(guildId: String) {
@@ -93,7 +98,7 @@ export async function handleGuildConfigDeletion(guildId: String) {
   const existingConfig = await Config.findOne({ guildId: guildId });
   if (existingConfig) {
     await Config.deleteOne({ guildId: guildId });
-    Logger.log(LogType.GuildConfigDeletion, `Deleted config for guild ${guildId}`); 
+    Logger.log(LogType.GuildConfigDeletion, `Deleted config for guild ${guildId}`);
   } else {
     Logger.log(LogType.GuildConfigDeletion, `Config for guild ${guildId} does not exist.`);
   }
@@ -115,9 +120,9 @@ export async function logGuildCreation(guild: Guild, client: Client) {
     const embed = new EmbedBuilder()
       .setTitle("Tropica has joined a new server!")
       .setDescription(
-        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** \`${guild.id}\`\n\n**Our new total servers:** ${client.guilds.cache.size}`
+        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** \`${guild.id}\`\n**Member count:** ${guild.memberCount}\n\n**Our new total servers:** ${client.guilds.cache.size}\n**Total members across all servers:** ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}`
       )
-      .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png")
+      .setThumbnail(guild.iconURL() ?? "attachment://discord-logo-christmas.png")
       .setTimestamp();
 
     const button = new ButtonBuilder()
@@ -130,13 +135,20 @@ export async function logGuildCreation(guild: Guild, client: Client) {
     if (!guild.iconURL()) {
       await logChannel.send({
         embeds: [embed],
-        files: [attachment],
+        files: [discordAttachment],
         components: [row],
       });
     } else {
       await logChannel.send({ embeds: [embed], files: [], components: [row] });
     }
   }
+}
+
+export function setActivityStatus(client: Client) {
+  const totalServers = client.guilds.cache.size;
+  client.user?.setActivity(`Powering ${totalServers} design servers!`, {
+    type: ActivityType.Custom,
+  });
 }
 
 async function handleGuildPossibleExclusion(guild: Guild) {
@@ -192,15 +204,15 @@ export async function logGuildDeletion(guild: Guild, client: Client) {
     const embed = new EmbedBuilder()
       .setTitle("Tropica has left a server!")
       .setDescription(
-        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}`
+        `**Name:** ${guild.name}\n**Owner ID:** <@${guild.ownerId}> (\`${guild.ownerId}\`)\n**Guild ID:** ${guild.id}\n\n**Our new total servers:** ${client.guilds.cache.size}\n**Total members across all servers:** ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}`
       )
       .setTimestamp()
-      .setThumbnail(guild.iconURL() || "attachment://tropica-logo.png");
+      .setThumbnail(guild.iconURL() || "attachment://discord-logo-christmas.png");
 
     if (!guild.iconURL()) {
       await logChannel.send({
         embeds: [embed],
-        files: [attachment],
+        files: [discordAttachment],
       });
     } else {
       await logChannel.send({ embeds: [embed], files: [] });
