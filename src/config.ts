@@ -16,6 +16,12 @@ export const TROPICA_LOGO_PATH = path.resolve(
   "tropica-logo.png"
 );
 
+export const DISCORD_LOGO_PATH = path.resolve(
+  process.cwd(),
+  "Images",
+  "discord-logo-christmas.png"
+)
+
 export const TROPICA_NBG_LOGO_PATH = path.resolve(
   process.cwd(),
   "Images",
