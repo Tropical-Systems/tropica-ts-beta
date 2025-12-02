@@ -11,20 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug secret existsd
-        run: |
-          if [ -z "${{ secrets.DISCORD_WEBHOOK_URL }}" ]; then
-            echo "Secret is EMPTY";
-          else
-            echo "Secret FOUND (not printing)";
-          fi
-
-      - name: Set up Node
+      - name: Set-Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install Production Dependencies
         run: npm ci
 
       - name: Run Test Build
@@ -32,17 +24,17 @@ jobs:
   
   build:
     runs-on: ubuntu-latest
-    environment: development # specific to development build
+    environment: development
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install Production Dependencies
         run: npm ci
 
       - name: Create .env file
@@ -57,28 +49,21 @@ jobs:
       - name: Run Test Build
         run: npm run build
 
-      - name: Notify Discord (starting deployment)
+      - name: Log Deployment notice
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\": \"🚀 Deployment started on GitHub Actions.\"}" \
+          -d "{\"content\": \"A new deployment to Development has started. \nExpect Tropica Beta to be down for 5 minutes.\"}" \
           "${{ secrets.DISCORD_WEBHOOK_URL }}"
 
-      - name: Install SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
-
-      - name: Install sshpass
+      - name: Install Sshpass Package
         run: sudo apt-get update && sudo apt-get install -y sshpass
 
-      - name: Test SSH conn
+      - name: Test Connection to Tropica VPS
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER}}@${{ secrets.SSH_HOST }} "cd ${{ secrets.TARGET_DIR }} && echo SSH OK"
           
-      - name: Upload files via rsync
+      - name: Upload Build files via rsync
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
           --exclude=".git" \
@@ -95,36 +80,19 @@ jobs:
             npm ci --production &&
             pm2 restart tropica-ts-beta || pm2 start index.js --name tropica-ts-beta --cwd ${{ secrets.TARGET_DIR }}
             "
-  
-      # - name: Setup SSH key
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy.key
-      #     chmod 600 ~/.ssh/deploy.key
+      - name: Wait for 1 minute
+        run: sleep 1m
 
-      # - name: Test SSH connectivity
-      #   run: |
-      #     ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo connected"
+      - name: Check PM2 instance status
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" \
+          ssh -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          "pm2 show tropica-ts-beta | grep 'status\s*online'"
 
-      # - name: Upload build files
-      #   run: |
-      #    rsync -avz -e "ssh -i ~/.ssh/deploy.key -p 22 -o StrictHostKeyChecking=no" \
-      #     dist/ \
-      #     .env \
-      #     package.json \
-      #     package-lock.json \
-      #     ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/ubuntu/Tropica-TS-Beta/new/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      - name: Log Deployment completed
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"Deployment sucessfull! \nTropica Beta **should** be online, if not contact ghost_unknown1.\"}" \
+          "${{ secrets.DISCORD_WEBHOOK_URL }}"
