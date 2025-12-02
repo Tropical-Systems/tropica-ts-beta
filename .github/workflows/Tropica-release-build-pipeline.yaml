@@ -88,7 +88,7 @@ jobs:
           sshpass -p "${{ secrets.SSH_PASSWORD }}" \
           ssh -o StrictHostKeyChecking=no \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-          "pm2 show tropica-ts-beta | grep 'status\s*online'"
+          "pm2 describe tropica-ts-beta | grep -i online"
 
       - name: Log Deployment completed
         run: |
